@@ -16,6 +16,7 @@ export type UseFetchProps = {
   url: string | null
 }
 
+// todo: remake w/ react-query:
 export const useFetch = <Model extends unknown>({
   customMockEnabled = false,
   schema,

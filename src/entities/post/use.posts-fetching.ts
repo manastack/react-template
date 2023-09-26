@@ -1,3 +1,4 @@
+import { apiConfig } from '@app/config'
 import { PostsModel, PostsSchema } from '@entities/post/posts.model'
 import { useFetch, UseFetchProps } from '@shared/lib/api'
 
@@ -7,8 +8,9 @@ export const usePostsFetching = (): {
   posts: PostsModel | null
 } => {
   const useFetchProps: UseFetchProps = {
+    customMockEnabled: apiConfig.postsReading.mock?.enabled,
     schema: PostsSchema,
-    url: 'https://jsonplaceholder.typicode.com/posts',
+    url: apiConfig.postsReading.getUrl(),
   }
 
   const {
