@@ -10,14 +10,12 @@ import { useAxiosInstance } from './use.axios-instance'
 export type UseUpdatingProps = {
   customMockEnabled?: boolean
   messageGetterDict: ApiMessageGetterDict
-  queryKey: string // todo: change to QueryKey
   url: string
 }
 
 export const useUpdating = <ReturningData = void, PostingData = void>({
   customMockEnabled = false,
   messageGetterDict,
-  queryKey,
   url,
 }: UseUpdatingProps): UseMutationResult<ReturningData, Error, PostingData> => {
   const axiosInstance: AxiosInstance = useAxiosInstance(customMockEnabled)
@@ -46,5 +44,5 @@ export const useUpdating = <ReturningData = void, PostingData = void>({
     [axiosInstance, onError, onLoading, onSuccess, url],
   )
 
-  return useMutation<ReturningData, Error, PostingData>([queryKey], queryFn)
+  return useMutation<ReturningData, Error, PostingData>(queryFn)
 }

@@ -13,7 +13,6 @@ export const usePostUpdating: UsePostUpdating = ({ id }) => {
   const props: UseUpdatingProps = {
     customMockEnabled: mock?.enabled,
     messageGetterDict,
-    queryKey: `postUpdating.${id}`,
     url: getUrl(id),
   }
 

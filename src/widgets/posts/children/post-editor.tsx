@@ -57,8 +57,6 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
 
   const titleInput: LegacyRef<HTMLInputElement> | undefined = useRef(null)
 
-  const bodyInput: LegacyRef<HTMLTextAreaElement> | undefined = useRef(null)
-
   const { isLoading, mutate: updatePost } = usePostUpdating({ id })
 
   const queryClient = useQueryClient()
@@ -94,7 +92,6 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
         className={setClassName('PostEditorBody', 'mb-2 text-3xl')}
         onChange={handleBodyInputValueChange}
         placeholder="Body of the post"
-        ref={bodyInput}
         rows={3}
         value={bodyInputValue}
         wrap="off"
