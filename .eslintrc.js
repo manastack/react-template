@@ -12,6 +12,8 @@ const extendsDict = {
 const rules = {
   '@typescript-eslint/no-unused-expressions': 'off', // - for <condition> && <expression>
 
+  'func-names': 'off', // - for unnamed fn
+
   'hooks/sort': [
     2,
     {
@@ -79,6 +81,8 @@ const rules = {
     {},
     { endOfLine: 'auto', usePrettierrc: true },
   ],
+
+  'react/display-name': 'off', // - for unnamed components
 
   'react/function-component-definition': 'off', // - for defining component as a function-declaration
 
