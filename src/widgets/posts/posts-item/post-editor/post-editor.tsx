@@ -61,7 +61,7 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
   const onSubmit: SubmitHandler<ValidationSchema> = useCallback(
     (data) => {
       updatePost(parsePostsItemModelToDto({ ...data, id, userId }))
-      queryClient.invalidateQueries(['posts']).then(() => {})
+      queryClient.invalidateQueries(['postsReading']).then(() => {})
       closePostEditor()
     },
     [closePostEditor, id, queryClient, updatePost, userId],
