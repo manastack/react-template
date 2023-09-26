@@ -68,6 +68,10 @@ const rules = {
 
   'jsx-a11y/anchor-is-valid': 'off', // - for using anchor w/ button together
 
+  'jsx-a11y/click-events-have-key-events': 'off', // - for click on native elements
+
+  'jsx-a11y/no-static-element-interactions': 'off', // - for click on native elements
+
   'no-redeclare': 'off', // - for typescript fn-overloading
 
   'no-restricted-exports': 'off', // - for export { default } from somewhere
