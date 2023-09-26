@@ -1,0 +1,10 @@
+*.local
+/build
+/coverage
+/dist
+/node_modules
+/public
+/.eslintrc.js
+/stylelint.config.js
+/vite.config.js
+/**/*.test.ts
