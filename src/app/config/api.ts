@@ -6,10 +6,15 @@ export const apiConfig: Record<QueryKey, ApiItemConfig> = {
   postsReading: {
     getUrl: () => 'https://jsonplaceholder.typicode.com/posts',
     messageGetterDict: {
-      error: () => 'Error while fetching posts',
+      error: (details) =>
+        `Error while fetching posts${details ? `: ${details}` : ''}`,
+
+      loading: () => 'Fetching posts...',
+
+      success: () => 'Posts fetched successfully',
     },
     mock: {
-      enabled: true,
+      enabled: false,
       loader: () => import('../../entities/post/posts.mock'),
     },
   },

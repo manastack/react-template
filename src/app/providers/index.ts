@@ -27,12 +27,9 @@ const withEnvProviderProps: OwnEnvProviderProps<EnvKey> = {
 const withApiProviderProps: OwnApiProviderProps = {
   isTest: import.meta.env.MODE === 'test',
   logger: {
-    error: [
-      (p: { id: string | number; message?: string }) =>
-        console.error(p.id, p.message), // eslint-disable-line no-console
-    ],
-    loading: [],
-    success: [],
+    error: [console.error], // eslint-disable-line no-console
+    loading: [console.log], // eslint-disable-line no-console
+    success: [console.log], // eslint-disable-line no-console
   },
 }
 

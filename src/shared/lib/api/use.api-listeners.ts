@@ -7,7 +7,6 @@ import { ApiMessageGetterDict } from './api.model'
 type ApiListener = (details?: string) => void
 
 type UseApiListeners = (props: {
-  id: string
   messageGetterDict: ApiMessageGetterDict
 }) => {
   onError: ApiListener
@@ -15,17 +14,17 @@ type UseApiListeners = (props: {
   onSuccess: ApiListener
 }
 
-export const useApiListeners: UseApiListeners = ({ id, messageGetterDict }) => {
+export const useApiListeners: UseApiListeners = ({ messageGetterDict }) => {
   const logger: Logger<QueryStatus> = useLogger<QueryStatus>()
 
   const onEvent = useCallback(
     (status: QueryStatus, details?: string) => {
       ;(logger[status] || []).forEach((logAction) => {
         messageGetterDict[status] &&
-          logAction({ id, message: messageGetterDict[status]!(details) })
+          logAction(messageGetterDict[status]!(details))
       })
     },
-    [id, logger, messageGetterDict],
+    [logger, messageGetterDict],
   )
 
   return {

@@ -1,4 +1,4 @@
-export type LogAction = (p: { id: string | number; message?: string }) => void
+export type LogAction = (message: string) => void
 
 export type Logger<Status extends string> = Partial<Record<Status, LogAction[]>>
 
