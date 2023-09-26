@@ -22,6 +22,7 @@
     "@manauser/react-emotion-naming": "^1.0.11",
     "@manauser/react-env": "^1.0.2",
     "@manauser/react-render-log": "^1.1.5",
+    "axios": "^1.4.0",
     "compose-function": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

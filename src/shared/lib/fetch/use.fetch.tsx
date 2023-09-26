@@ -1,54 +1,58 @@
 import { useEffect, useState } from 'react'
+import { AxiosInstance, AxiosResponse } from 'axios'
 
-export type FetchContextValue<D extends unknown> = {
-  data: D | null
+import { useAxiosInstance } from './use.axios-instance'
+
+export type FetchContextValue<Model extends unknown> = {
+  data: Model | null
   hasError: boolean
   isLoading: boolean
 }
 
-export const useFetch = <D extends unknown>(
-  url: string | null,
-): FetchContextValue<D> => {
-  const [data, setData] = useState<D | null>(null)
+type UseFetchProps = {
+  url: string | null
+  customMockEnabled?: boolean
+}
+
+export const useFetch = <Dto, Model>({
+  url,
+  customMockEnabled = false,
+}: UseFetchProps): FetchContextValue<Model> => {
+  const [data, setData] = useState<Model | null>(null)
   const [hasError, setHasError] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
+  const axiosInstance: AxiosInstance = useAxiosInstance(customMockEnabled)
+
   useEffect(() => {
-    const fetchData = async (): Promise<void> => {
+    const fetchData = async (): Promise<Model | null> => {
       console.log('>>> FetchProvider.fetchData') // eslint-disable-line no-console
-      let response: Response | null = null
+      const response: AxiosResponse<Dto> = await axiosInstance.get(url!)
 
-      try {
-        response = await fetch(url!)
-      } catch (error) {
-        console.error('>>> error by fetch', error) // eslint-disable-line no-console
-        setHasError(true)
-        return
-      }
-
-      if (!response.ok) {
+      if (response.status !== 200) {
+        // todo: add logger as provider-props:
+        // todo: change console.error to error throw:
         console.error('>>> response.status', response.status) // eslint-disable-line no-console
         setHasError(true)
-        return
+        return null
       }
 
-      // todo: should add a checking for the data (by model)
-
-      try {
-        const newData: D = await response.json()
-        setData(newData)
-      } catch (error) {
-        console.error('>>> error by response.json()', error) // eslint-disable-line no-console
-        setHasError(true)
-      }
+      // todo: should add dto parsing to model:
+      return (response.data as unknown) as Model
     }
 
     if (!url) return
 
     setIsLoading(true)
     setData(null)
-    fetchData().finally(() => setIsLoading(false))
-  }, [url])
+    fetchData()
+      .then((newData: Model | null) => {
+        setHasError(false)
+        setData(newData)
+      })
+      .catch(() => setHasError(true))
+      .finally(() => setIsLoading(false))
+  }, [axiosInstance, url])
 
   return { data, hasError, isLoading }
 }
