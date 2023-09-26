@@ -28,7 +28,7 @@ export const apiConfig: Record<QueryKey, ApiItemConfig> = {
       success: () => 'Posts fetched successfully',
     },
     mock: {
-      enabled: false,
+      enabled: true,
       loader: () => import('../../entities/post/posts.mock'),
     },
   },

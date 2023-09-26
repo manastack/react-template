@@ -16,6 +16,10 @@ const PostsItemModelSchema = PostsItemDtoSchema.transform(
 
 export type PostsItemDto = z.infer<typeof PostsItemDtoSchema>
 
+export const PostsDtoSchema = z.array(PostsItemDtoSchema)
+
+export type PostsDto = z.infer<typeof PostsDtoSchema>
+
 export type PostsItemModel = z.infer<typeof PostsItemModelSchema>
 
 export const PostsModelSchema = z.array(PostsItemModelSchema)

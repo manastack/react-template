@@ -1,10 +1,10 @@
 import { apiConfig } from '@app/config'
 import { mockAdapter, MockStore } from '@shared/lib/api'
 import { withDelay } from '@shared/lib/async'
-import { PostsItemModel, PostsModel } from './posts.model'
+import { PostsDto, PostsItemDto } from './posts.model'
 
 const mock = () => {
-  const PostsMock: PostsModel = [
+  const PostsMock: PostsDto = [
     {
       body: 'body 1',
       id: 1,
@@ -25,7 +25,7 @@ const mock = () => {
     },
   ]
 
-  const postsMockStore = new MockStore<PostsModel>(PostsMock)
+  const postsMockStore = new MockStore<PostsDto>(PostsMock)
 
   const { postsReading } = apiConfig
 
@@ -36,7 +36,7 @@ const mock = () => {
     .reply(withDelay([200, postsMockStore.data], 1000))
 
   mockAdapter.onPut(postsReading.getUrl()).reply((config) => {
-    const dto = JSON.parse(config.data) as PostsItemModel
+    const dto = JSON.parse(config.data) as PostsItemDto
     const post = postsMockStore.data?.find(({ id }) => id === dto.id)
 
     if (!post) {
