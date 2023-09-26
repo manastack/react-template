@@ -10,6 +10,7 @@ import { Home } from '@pages/home'
 import { env } from '@shared/config'
 import { withProviders } from './providers'
 
+import './styles/tailwind.css'
 import { StyledApp } from './styles/app.style'
 import { GlobalStyles } from './styles/global.style'
 
@@ -19,7 +20,7 @@ const App: FC<PropsWithEmotionNaming<{}>> = ({ setClassName }) => (
     <StyledApp className={setClassName('App')}>
       <Home />
     </StyledApp>
-    <span style={{ display: 'none' }}>{env.VITE_TIMESTAMP}</span>
+    <span className="hidden">{env.VITE_TIMESTAMP}</span>
   </>
 )
 

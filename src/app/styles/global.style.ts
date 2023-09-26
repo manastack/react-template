@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
+import tw from 'twin.macro'
 
 export const GlobalStyles = css`
   html {
-    box-sizing: border-box;
-    height: 100%;
+    ${tw`box-border h-full`}
   }
 
   *,
@@ -13,14 +13,10 @@ export const GlobalStyles = css`
   }
 
   body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+    ${tw`m-0 h-full bg-gray-800 p-0 font-sans text-white`}
   }
 
   #root {
-    position: relative;
-
-    height: 100%;
+    ${tw`relative h-full`}
   }
 `

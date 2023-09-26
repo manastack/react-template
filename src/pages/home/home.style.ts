@@ -1,15 +1,3 @@
-import styled from '@emotion/styled'
+import tw from 'twin.macro'
 
-export const StyledHome = styled.div`
-  display: flex;
-  align-items: center;
-  flex: 1;
-  justify-content: center;
-
-  height: 100vh;
-
-  color: red;
-  background-color: darkslategrey;
-
-  font-family: sans-serif;
-`
+export const StyledHome = tw.div`flex-auto flex items-center justify-center h-screen text-red-500 font-sans bg-gray-900`

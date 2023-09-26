@@ -13,8 +13,39 @@ export default defineConfig(({ mode }) => ({
     define: {
       this: 'window',
     },
+    jsxInject: "import * as React from 'react'",
+    logOverride: { 'this-is-undefined-in-esm': 'silent' }, // https://github.com/vitejs/vite/issues/8644#issuecomment-1159308803
   },
-  plugins: [react(), tsconfigPaths(), splitVendorChunkPlugin()],
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'es2020',
+    },
+  },
+  plugins: [
+    react({
+      babel: {
+        plugins: [
+          'babel-plugin-macros',
+          [
+            '@emotion/babel-plugin-jsx-pragmatic',
+            {
+              export: 'jsx',
+              import: '__cssprop',
+              module: '@emotion/react',
+            },
+          ],
+          [
+            '@babel/plugin-transform-react-jsx',
+            { pragma: '__cssprop' },
+            'twin.macro',
+          ],
+        ],
+      },
+      // jsxRuntime: 'classic',
+    }),
+    tsconfigPaths(),
+    splitVendorChunkPlugin(),
+  ],
   test: {
     coverage: {
       all: true,

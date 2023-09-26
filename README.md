@@ -10,6 +10,8 @@ This is a simple React app using Vite. It includes the following:
 - [x] [ESLint](https://eslint.org/)
 - [x] [Prettier](https://prettier.io/)
 - [x] [Stylelint](https://stylelint.io/)
+- [x] [TailwindCSS](https://tailwindcss.com/)
+- [x] [Twin.Macro](https://www.npmjs.com/package/twin.macro)
 - [x] [TypeScript](https://www.typescriptlang.org/)
 - [x] [Vite](https://vitejs.dev/)
 - [x] [Vitest](https://github.com/vitest-dev/vitest#readme)
@@ -70,3 +72,58 @@ pnpm preview
 ### Customize configuration
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
+
+## TailWind's Config for WebStorm
+
+```json
+{
+  "includeLanguages": {
+    "ftl": "html",
+    "jinja": "html",
+    "jinja2": "html",
+    "smarty": "html",
+    "tmpl": "gohtml",
+    "cshtml": "html",
+    "vbhtml": "html",
+    "razor": "html",
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+  "files": {
+    "exclude": [
+      "**/.git/**",
+      "**/node_modules/**",
+      "**/.hg/**",
+      "**/.svn/**"
+    ]
+  },
+  "emmetCompletions": false,
+  "classAttributes": ["class", "className", "ngClass", "tw"],
+  "colorDecorators": false,
+  "showPixelEquivalents": true,
+  "rootFontSize": 16,
+  "hovers": true,
+  "suggestions": true,
+  "codeActions": true,
+  "validate": true,
+  "lint": {
+    "invalidScreen": "error",
+    "invalidVariant": "error",
+    "invalidTailwindDirective": "error",
+    "invalidApply": "error",
+    "invalidConfigPath": "error",
+    "cssConflict": "warning",
+    "recommendedVariantOrder": "warning"
+  },
+  "experimental": {
+    "configFile": null,
+    "classRegex": [
+      "tw`([^`]*)",
+      "tw=\"([^\"]*)",
+      "tw={\"([^\"}]*)",
+      "tw\\.\\w+`([^`]*)",
+      "tw\\(.*?\\)`([^`]*)"
+    ]
+  }
+}
+```
