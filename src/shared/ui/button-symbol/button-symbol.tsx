@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { ButtonHTMLAttributes, DetailedHTMLProps, FC } from 'react'
 import {
   PropsWithEmotionNaming,
   withEmotionNaming,
@@ -7,15 +7,17 @@ import { withRenderLog } from '@manauser/react-render-log'
 
 import { StyledButtonSymbol } from './button-symbol.style'
 
-type Props = {
-  handleClick: (...p: unknown[]) => void
+type Props = DetailedHTMLProps<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+> & {
+  handleClick?: (...p: unknown[]) => void
   className?: string
-  disabled?: boolean
   label: string
 }
 
 const ButtonSymbol: FC<PropsWithEmotionNaming<Props>> = ({
-  handleClick,
+  handleClick: onClick,
   className = '',
   disabled = false,
   label,
@@ -23,8 +25,7 @@ const ButtonSymbol: FC<PropsWithEmotionNaming<Props>> = ({
 }) => (
   <StyledButtonSymbol
     className={setClassName('ButtonSymbol', className)}
-    disabled={disabled}
-    onClick={handleClick}
+    {...{ disabled, onClick }}
   >
     {label}
   </StyledButtonSymbol>

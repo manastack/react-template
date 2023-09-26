@@ -4,9 +4,9 @@ import tw from 'twin.macro'
 
 import { StyledPostsItem, StyledPostsItemBody } from './common.style'
 
-export const StyledPostEditor = styled.div`
+export const StyledPostEditor = styled.form`
   ${StyledPostsItem};
-  ${tw`bg-blue-900 text-blue-300`};
+  ${tw`m-0 bg-blue-900 text-blue-300`};
 `
 
 const inputStyle = css`

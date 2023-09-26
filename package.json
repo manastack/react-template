@@ -23,6 +23,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@hookform/resolvers": "^3.3.1",
     "@manauser/react-emotion-naming": "^1.0.11",
     "@manauser/react-env": "^1.0.2",
     "@manauser/react-render-log": "^1.1.5",
@@ -34,6 +35,7 @@
     "notistack": "^3.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.46.2",
     "tailwindcss": "^3.3.3",
     "twin.macro": "^3.4.0",
     "zod": "^3.21.4"
