@@ -4,7 +4,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig(({ mode }) => ({
   build: {
-    minify: true,
+    minify: mode === 'production',
     outDir: 'build',
     sourcemap: mode !== 'production',
     target: 'esnext',
