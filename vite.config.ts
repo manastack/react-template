@@ -5,10 +5,8 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 export default defineConfig(({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
   console.log('mode:', mode) // eslint-disable-line no-console
-  console.log('assets url:', process.env.VITE_ASSETS_URL) // eslint-disable-line no-console
 
   return {
-    base: process.env.VITE_ASSETS_URL || '/',
     build: {
       minify: mode === 'production',
       outDir: 'build',
