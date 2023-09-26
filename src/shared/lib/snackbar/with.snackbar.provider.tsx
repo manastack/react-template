@@ -23,7 +23,7 @@ export const withSnackbarProvider: WithSnackbarProvider = function <
   const ownSnackbarProviderProps: SnackbarProviderProps = {
     ...this,
     action: ((id) => (
-      <ButtonSymbol action={() => closeSnackbar(id)} label="&times;" />
+      <ButtonSymbol handleClick={() => closeSnackbar(id)} label="&times;" />
     )) as SnackbarAction,
     anchorOrigin: {
       horizontal: 'right',

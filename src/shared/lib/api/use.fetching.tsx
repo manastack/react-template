@@ -8,21 +8,21 @@ import { ErrorResponseParsing } from './error.response-parsing'
 import { useApiListeners } from './use.api-listeners'
 import { useAxiosInstance } from './use.axios-instance'
 
-export type UseFetchProps = {
+export type UseFetchingProps = {
   customMockEnabled?: boolean
-  id: string
+  id: string // todo: change to QueryKey
   messageGetterDict: ApiMessageGetterDict
   schema: ZodTypeAny // todo: change to zod schema
   url: string
 }
 
-export const useFetch = <Model extends unknown>({
+export const useFetching = <Model extends unknown>({
   customMockEnabled = false,
   id,
   messageGetterDict,
   schema,
   url,
-}: UseFetchProps): UseQueryResult<Model, Error> => {
+}: UseFetchingProps): UseQueryResult<Model> => {
   const axiosInstance: AxiosInstance = useAxiosInstance(customMockEnabled)
 
   const { onError, onLoading, onSuccess } = useApiListeners({
@@ -43,7 +43,7 @@ export const useFetch = <Model extends unknown>({
       }
     } catch (error) {
       if (error instanceof AxiosError) {
-        onError('error by data fetching (wrong url)')
+        onError('error by data fetching')
         throw error
       }
 
@@ -56,5 +56,5 @@ export const useFetch = <Model extends unknown>({
     }
   }, [axiosInstance, onError, onLoading, onSuccess, schema, url])
 
-  return useQuery<Model, Error>([id], queryFn)
+  return useQuery<Model>([id], queryFn)
 }

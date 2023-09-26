@@ -11,7 +11,7 @@ export const axiosInstances: AxiosInstances = serverTypes.reduce(
   (acc, cur: ServerType) => ({
     ...acc,
     [cur]: axios.create({
-      headers: { 'Content-type': 'application/json' },
+      headers: { 'Content-type': 'application/json; charset=UTF-8' },
     }),
   }),
   {} as AxiosInstances,

@@ -8,20 +8,23 @@ import { withRenderLog } from '@manauser/react-render-log'
 import { StyledButtonSymbol } from './button-symbol.style'
 
 type Props = {
-  action: (...p: unknown[]) => void
+  handleClick: (...p: unknown[]) => void
   className?: string
+  disabled?: boolean
   label: string
 }
 
 const ButtonSymbol: FC<PropsWithEmotionNaming<Props>> = ({
-  action,
+  handleClick,
   className = '',
+  disabled = false,
   label,
   setClassName,
 }) => (
   <StyledButtonSymbol
     className={setClassName('ButtonSymbol', className)}
-    onClick={action}
+    disabled={disabled}
+    onClick={handleClick}
   >
     {label}
   </StyledButtonSymbol>

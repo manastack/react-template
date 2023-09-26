@@ -1,3 +1,16 @@
-import tw from 'twin.macro'
+import tw, { styled } from 'twin.macro'
 
-export const StyledButtonSymbol = tw.button`cursor-pointer transition-opacity duration-200 opacity-50 hover:opacity-100 focus:opacity-100 text-inherit border-none bg-none font-bold text-[1,5rem]`
+export const StyledButtonSymbol = styled.button`
+  ${tw`cursor-pointer border-none bg-none text-[1,5rem] font-bold text-inherit opacity-50 transition-opacity duration-200 hover:opacity-100 focus:opacity-100`}
+
+  &:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.3;
+
+    &:hover,
+    &:focus {
+      opacity: 0.3;
+    }
+  }
+`

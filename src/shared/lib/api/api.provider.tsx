@@ -17,6 +17,7 @@ const defaultOptions: DefaultOptions = {
     networkMode: 'offlineFirst',
   },
   queries: {
+    keepPreviousData: true,
     networkMode: 'offlineFirst',
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 30, // 30 min

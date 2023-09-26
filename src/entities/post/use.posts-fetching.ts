@@ -1,13 +1,13 @@
 import { apiConfig } from '@app/config'
 import { PostsModel, PostsSchema } from '@entities/post/posts.model'
-import { useFetch, UseFetchProps } from '@shared/lib/api'
+import { useFetching, UseFetchingProps } from '@shared/lib/api'
 
 export const usePostsFetching = (): {
   hasPostsError: boolean
   isPostsLoading: boolean
   posts: PostsModel | null
 } => {
-  const props: UseFetchProps = {
+  const props: UseFetchingProps = {
     customMockEnabled: apiConfig.postsReading.mock?.enabled,
     id: 'postsReading',
     messageGetterDict: apiConfig.postsReading.messageGetterDict,
@@ -19,7 +19,7 @@ export const usePostsFetching = (): {
     data: posts = null,
     isLoading: isPostsLoading,
     isError: hasPostsError,
-  } = useFetch<PostsModel>(props)
+  } = useFetching<PostsModel>(props)
 
   return { hasPostsError, isPostsLoading, posts }
 }

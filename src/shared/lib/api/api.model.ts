@@ -1,6 +1,6 @@
 import { ComponentType } from 'react'
 
-import { Logger } from '@shared/lib/logger/logger.model'
+import { Logger } from '@shared/lib/logger'
 
 type QueryStatus = 'loading' | 'error' | 'success'
 
