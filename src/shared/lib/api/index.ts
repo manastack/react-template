@@ -1,5 +1,6 @@
-export type { ApiItemConfig } from './api.model'
+export type { ApiItemConfig, OwnApiProviderProps } from './api.model'
 export { mockAdapter } from './mock-adapter'
 export { MockStore } from './mock-store'
-export type { UseFetchProps, FetchContextValue } from './use.fetch'
 export { useFetch } from './use.fetch'
+export type { UseFetchProps } from './use.fetch'
+export { withApiProvider } from './with.api.provider'

@@ -1,9 +1,17 @@
+import { ComponentType } from 'react'
+
+import { Logger } from '@shared/lib/logger/logger.model'
+
 type QueryStatus = 'loading' | 'error' | 'success'
 
-type ApiMessage = Partial<Record<QueryStatus, string>>
+type ApiMessageGetter = (p?: string | number) => string
+
+export type ApiMessageGetterDict = Partial<
+  Record<QueryStatus, ApiMessageGetter>
+>
 
 export type ApiItemConfig = {
-  getMessages: (p?: string | number) => ApiMessage
+  messageGetterDict: ApiMessageGetterDict
   getUrl: (...args: unknown[]) => string
   mock?: {
     enabled: boolean
@@ -11,3 +19,13 @@ export type ApiItemConfig = {
     loader: () => Promise<unknown>
   }
 }
+
+export type OwnApiProviderProps = {
+  isTest?: boolean
+  logger?: Logger<QueryStatus>
+}
+
+export type WithApiProvider = <Props extends {}>(
+  this: OwnApiProviderProps,
+  Component: ComponentType<Props>,
+) => ComponentType<Props>

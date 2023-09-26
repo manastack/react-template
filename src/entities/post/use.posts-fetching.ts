@@ -7,17 +7,19 @@ export const usePostsFetching = (): {
   isPostsLoading: boolean
   posts: PostsModel | null
 } => {
-  const useFetchProps: UseFetchProps = {
+  const props: UseFetchProps = {
     customMockEnabled: apiConfig.postsReading.mock?.enabled,
+    id: 'postsReading',
+    messageGetterDict: apiConfig.postsReading.messageGetterDict,
     schema: PostsSchema,
     url: apiConfig.postsReading.getUrl(),
   }
 
   const {
-    data: posts,
+    data: posts = null,
     isLoading: isPostsLoading,
-    hasError: hasPostsError,
-  } = useFetch<PostsModel>(useFetchProps)
+    isError: hasPostsError,
+  } = useFetch<PostsModel>(props)
 
   return { hasPostsError, isPostsLoading, posts }
 }

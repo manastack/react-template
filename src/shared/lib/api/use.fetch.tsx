@@ -1,60 +1,77 @@
-import { useEffect, useState } from 'react'
+import { useCallback } from 'react'
+import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { AxiosInstance, AxiosResponse } from 'axios'
 import { ZodTypeAny } from 'zod'
 
+import { ApiMessageGetterDict } from './api.model'
+import { useApiListeners } from './use.api-listeners'
 import { useAxiosInstance } from './use.axios-instance'
-
-export type FetchContextValue<Model extends unknown> = {
-  data: Model | null
-  hasError: boolean
-  isLoading: boolean
-}
 
 export type UseFetchProps = {
   customMockEnabled?: boolean
-  schema: ZodTypeAny
-  url: string | null
+  id: string
+  messageGetterDict: ApiMessageGetterDict
+  schema: ZodTypeAny // todo: change to zod schema
+  url: string
 }
 
-// todo: remake w/ react-query:
 export const useFetch = <Model extends unknown>({
   customMockEnabled = false,
+  id,
+  messageGetterDict,
   schema,
   url,
-}: UseFetchProps): FetchContextValue<Model> => {
-  const [data, setData] = useState<Model | null>(null)
-  const [hasError, setHasError] = useState<boolean>(false)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-
+}: UseFetchProps): UseQueryResult<Model, Error> => {
   const axiosInstance: AxiosInstance = useAxiosInstance(customMockEnabled)
 
-  useEffect(() => {
-    const fetchData = async (): Promise<Model | null> => {
-      const response: AxiosResponse<Model> = await axiosInstance.get(url!)
+  const { onError, onLoading, onSuccess } = useApiListeners({
+    id,
+    messageGetterDict,
+  })
 
-      if (response.status !== 200) {
-        // todo: add logger as provider-props:
-        // todo: change console.error to error throw:
-        console.error('>>> response.status', response.status) // eslint-disable-line no-console
-        setHasError(true)
-        return null
+  const fetchData = useCallback(
+    async (fetchProps: {
+      axiosInstance: AxiosInstance
+      onError: (message?: string) => void
+      url: string
+    }): Promise<AxiosResponse> => {
+      try {
+        const response: AxiosResponse = await fetchProps.axiosInstance.get(
+          fetchProps.url,
+        )
+
+        if (response.status !== 200) {
+          const errorMessage = `Error by data fetching (wrong response status: ${response.status})`
+          fetchProps.onError(errorMessage)
+          throw new Error(errorMessage)
+        }
+
+        return response
+      } catch (error) {
+        fetchProps.onError('Error by data fetching (wrong url)')
+        throw error
       }
+    },
+    [],
+  )
 
-      return schema.parse(response.data) as Model
+  const queryFn = useCallback(async (): Promise<Model> => {
+    onLoading()
+    const response: AxiosResponse = await fetchData({
+      axiosInstance,
+      onError,
+      url,
+    })
+
+    try {
+      const data = schema.parse(response.data) as Model
+      onSuccess()
+      return data
+    } catch (error) {
+      onError('Error by data parsing')
+      throw error
     }
+  }, [axiosInstance, fetchData, onError, onLoading, onSuccess, schema, url])
 
-    if (!url) return
-
-    setIsLoading(true)
-    setData(null)
-    fetchData()
-      .then((newData: Model | null) => {
-        setHasError(false)
-        setData(newData)
-      })
-      .catch(() => setHasError(true))
-      .finally(() => setIsLoading(false))
-  }, [axiosInstance, schema, url])
-
-  return { data, hasError, isLoading }
+  return useQuery<Model, Error>([id], queryFn)
 }
