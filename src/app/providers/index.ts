@@ -6,36 +6,45 @@ import {
   withRenderLogProvider,
 } from '@manauser/react-render-log'
 import compose from 'compose-function'
+import { enqueueSnackbar } from 'notistack'
 
 import { OwnApiProviderProps, withApiProvider } from '@shared/lib/api'
+import { withSnackbarProvider } from '@shared/lib/snackbar'
 import { envConfig, EnvKey } from '../config'
 
 const ownEmotionNamingProviderProps: OwnEmotionNamingProviderProps = {
   debugEnabled: import.meta.env.MODE !== 'production',
 }
 
-const withRenderLogProviderProps: OwnRenderLogProviderProps = {
+const ownRenderLogProviderProps: OwnRenderLogProviderProps = {
   debugEnabled: import.meta.env.MODE !== 'production',
   isStrictMode: import.meta.env.MODE === 'development',
 }
 
-const withEnvProviderProps: OwnEnvProviderProps<EnvKey> = {
+const ownEnvProviderProps: OwnEnvProviderProps<EnvKey> = {
   env: import.meta.env,
   envConfig,
 }
 
-const withApiProviderProps: OwnApiProviderProps = {
+const ownApiProviderProps: OwnApiProviderProps = {
   isTest: import.meta.env.MODE === 'test',
   logger: {
-    error: [console.error], // eslint-disable-line no-console
+    error: [
+      console.error, // eslint-disable-line no-console
+      (p: string) => enqueueSnackbar(p, { variant: 'error' }),
+    ],
     loading: [console.log], // eslint-disable-line no-console
-    success: [console.log], // eslint-disable-line no-console
+    success: [
+      console.log, // eslint-disable-line no-console
+      (p: string) => enqueueSnackbar(p, { variant: 'success' }),
+    ],
   },
 }
 
 export const withProviders = compose(
+  withSnackbarProvider,
   withEmotionNamingProvider.bind(ownEmotionNamingProviderProps),
-  withRenderLogProvider.bind(withRenderLogProviderProps),
-  withEnvProvider.bind(withEnvProviderProps),
-  withApiProvider.bind(withApiProviderProps),
+  withRenderLogProvider.bind(ownRenderLogProviderProps),
+  withEnvProvider.bind(ownEnvProviderProps),
+  withApiProvider.bind(ownApiProviderProps), // must be after withSnackbarProvider
 )
