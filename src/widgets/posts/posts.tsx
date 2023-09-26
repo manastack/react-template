@@ -6,8 +6,7 @@ import {
 import { withRenderLog } from '@manauser/react-render-log'
 
 import { PostsItemModel, usePostsFetching } from '@entities/post'
-import PostEditor from './children/post-editor'
-import PostViewer from './children/post-viewer'
+import { PostEditor, PostViewer } from './posts-item'
 
 import { StyledPosts } from './posts.style'
 

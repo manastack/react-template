@@ -5,7 +5,7 @@ import {
   StyledPostsItemBody,
   StyledPostsItemTitle,
   StyledPostsItemToolbar,
-} from './common.style'
+} from '../posts-item.style'
 
 export const StyledPostViewer = styled.div`
   ${StyledPostsItem};

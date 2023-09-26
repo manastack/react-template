@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import tw from 'twin.macro'
 
-import { StyledPostsItem, StyledPostsItemBody } from './common.style'
+import { StyledPostsItem, StyledPostsItemBody } from '../posts-item.style'
 
 export const StyledPostEditor = styled.form`
   ${StyledPostsItem};
