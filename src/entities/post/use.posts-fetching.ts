@@ -1,6 +1,5 @@
-import { PostsModel, PostsSchema } from 'src/entities/post/posts.model'
-
-import { useFetch, UseFetchProps } from '@shared/lib/fetch'
+import { PostsModel, PostsSchema } from '@entities/post/posts.model'
+import { useFetch, UseFetchProps } from '@shared/lib/api'
 
 export const usePostsFetching = (): {
   hasPostsError: boolean
