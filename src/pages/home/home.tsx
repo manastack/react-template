@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import reactLogo from '@assets/images/react.svg'
 import {
   PropsWithEmotionNaming,
   withEmotionNaming,
@@ -14,6 +15,7 @@ const Home: FC<PropsWithEmotionNaming<{}>> = ({ setClassName }) => {
 
   return (
     <StyledHome className={setClassName('Home')}>
+      <img src={reactLogo} alt="" />
       {isPostsLoading && <div>Loading...</div>}
       {hasPostsError && <div>Error</div>}
       {posts && <div>{posts.length} posts</div>}
