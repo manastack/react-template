@@ -27,27 +27,29 @@ const mock = () => {
 
   const postsMockStore = new MockStore<PostsDto>(PostsMock)
 
-  const { postsReading } = apiConfig
+  const { postUpdating, postsReading } = apiConfig
 
-  if (!postsReading.mock?.enabled) return
+  postsReading.mock?.enabled &&
+    postsReading.mock?.getUrl &&
+    mockAdapter
+      .onGet(postsReading.mock.getUrl())
+      .reply(withDelay([200, postsMockStore.data], 1000))
 
-  mockAdapter
-    .onGet(postsReading.getUrl())
-    .reply(withDelay([200, postsMockStore.data], 1000))
+  postUpdating.mock?.enabled &&
+    postUpdating.mock?.getUrl &&
+    mockAdapter.onPut(postUpdating.mock.getUrl()).reply((config) => {
+      const dto = JSON.parse(config.data) as PostsItemDto
+      const post = postsMockStore.data?.find(({ id }) => id === dto.id)
 
-  mockAdapter.onPut(postsReading.getUrl()).reply((config) => {
-    const dto = JSON.parse(config.data) as PostsItemDto
-    const post = postsMockStore.data?.find(({ id }) => id === dto.id)
+      if (!post) {
+        return [404]
+      }
 
-    if (!post) {
-      return [404]
-    }
+      post.body = dto.body
+      post.title = dto.title
 
-    post.body = dto.body
-    post.title = dto.title
-
-    return [200]
-  })
+      return [200]
+    })
 }
 
 mock()

@@ -14,8 +14,9 @@ export type ApiItemConfig = {
   messageGetterDict: ApiMessageGetterDict
   getUrl: (...args: unknown[]) => string
   mock?: {
-    enabled: boolean
     delay?: number
+    enabled: boolean
+    getUrl?: (...args: unknown[]) => string | RegExp
     loader: () => Promise<unknown>
   }
 }
