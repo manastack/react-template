@@ -14,6 +14,9 @@ dependencies:
   '@manauser/react-emotion-naming':
     specifier: ^1.0.11
     version: 1.0.11(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
+  '@manauser/react-env':
+    specifier: ^1.0.2
+    version: 1.0.2(react-dom@18.2.0)(react@18.2.0)
   '@manauser/react-render-log':
     specifier: ^1.1.5
     version: 1.1.5(react-dom@18.2.0)(react@18.2.0)
@@ -930,6 +933,17 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
       - '@types/react'
+    dev: false
+
+  /@manauser/react-env@1.0.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Joy5x9WfaXQyZ+EaCbNVilrIwFxamZvDJS8jkyHe0tRk7RtCbJh/CFiSDXrEOHHKdFigObA7ZPLumkGXJKA0zA==}
+    engines: {node: '20', pnpm: '8'}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /@manauser/react-render-log@1.1.5(react-dom@18.2.0)(react@18.2.0):
