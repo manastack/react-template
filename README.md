@@ -1,0 +1,1 @@
+# react-federation-vite-template
