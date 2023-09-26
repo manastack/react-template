@@ -23,12 +23,12 @@ const PostViewer: FC<PropsWithEmotionNaming<Props>> = ({
   body,
   handleEdit,
   id,
+  name,
   setClassName,
-  title,
 }) => (
   <StyledPostViewer className={setClassName('PostViewer', 'group')}>
     <StyledPostViewerTitle className={setClassName('PostViewerTitle')}>
-      {title}
+      {name}
     </StyledPostViewerTitle>
     <StyledPostViewerBody className={setClassName('PostViewerBody')}>
       {body}

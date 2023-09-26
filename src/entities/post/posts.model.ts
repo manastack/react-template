@@ -1,14 +1,23 @@
 import { z } from 'zod'
 
-export const PostsItemSchema = z.object({
+const PostsItemDtoSchema = z.object({
   body: z.string(),
   id: z.number(),
   title: z.string(),
   userId: z.number(),
 })
 
-export type PostsItemModel = z.infer<typeof PostsItemSchema>
+const PostsItemModelSchema = PostsItemDtoSchema.transform(
+  ({ title, ...restFields }) => ({
+    name: title,
+    ...restFields,
+  }),
+)
 
-export const PostsSchema = z.array(PostsItemSchema)
+export type PostsItemDto = z.infer<typeof PostsItemDtoSchema>
 
-export type PostsModel = z.infer<typeof PostsSchema>
+export type PostsItemModel = z.infer<typeof PostsItemModelSchema>
+
+export const PostsModelSchema = z.array(PostsItemModelSchema)
+
+export type PostsModel = z.infer<typeof PostsModelSchema>

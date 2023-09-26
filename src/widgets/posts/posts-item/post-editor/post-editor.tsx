@@ -9,7 +9,11 @@ import { withRenderLog } from '@manauser/react-render-log'
 import { useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 
-import { PostsItemModel, usePostUpdating } from '@entities/post'
+import {
+  parsePostsItemModelToDto,
+  PostsItemModel,
+  usePostUpdating,
+} from '@entities/post'
 import { ButtonSymbol } from '@shared/ui/button-symbol'
 
 import {
@@ -22,7 +26,7 @@ import {
 const message = 'This field is required'
 const validationSchema = z.object({
   body: z.string().min(1, { message }),
-  title: z.string().min(5, { message }),
+  name: z.string().min(5, { message }),
 })
 
 type ValidationSchema = z.infer<typeof validationSchema>
@@ -35,8 +39,8 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
   body,
   closePostEditor,
   id,
+  name,
   setClassName,
-  title,
   userId,
 }) => {
   const {
@@ -51,12 +55,12 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
 
   const queryClient = useQueryClient()
 
-  const titleInput: LegacyRef<HTMLInputElement> | undefined = useRef(null)
-  const { ref: titleRef, ...titleRest } = register('title')
+  const nameInput: LegacyRef<HTMLInputElement> | undefined = useRef(null)
+  const { ref: nameRef, ...nameRest } = register('name')
 
   const onSubmit: SubmitHandler<ValidationSchema> = useCallback(
     (data) => {
-      updatePost({ ...data, id, userId })
+      updatePost(parsePostsItemModelToDto({ ...data, id, userId }))
       queryClient.invalidateQueries(['posts']).then(() => {})
       closePostEditor()
     },
@@ -64,7 +68,7 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
   )
 
   useEffect(() => {
-    titleInput.current?.focus()
+    nameInput.current?.focus()
   }, [])
 
   return (
@@ -74,21 +78,21 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
     >
       <StyledPostEditorTitle
         className={setClassName('PostEditorTitle', 'mb-2 text-3xl', {
-          'bg-red': errors.title,
+          'bg-red': errors.name,
         })}
-        defaultValue={title}
-        id="title"
+        defaultValue={name}
+        id="name"
         placeholder="Title of the post"
         ref={(event) => {
-          titleRef(event)
+          nameRef(event)
           // @ts-ignore
-          titleInput.current = event
+          nameInput.current = event
         }}
-        {...titleRest}
+        {...nameRest}
       />
-      {errors.title && (
+      {errors.name && (
         <div className="-mt-3 h-3 text-[8px] text-red-500">
-          {errors.title?.message}
+          {errors.name?.message}
         </div>
       )}
       <StyledPostEditorBody

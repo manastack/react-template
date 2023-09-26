@@ -1,5 +1,5 @@
 import { apiConfig } from '@app/config'
-import { PostsModel, PostsSchema } from '@entities/post/posts.model'
+import { PostsModel, PostsModelSchema } from '@entities/post/posts.model'
 import { useFetching, UseFetchingProps } from '@shared/lib/api'
 
 export const usePostsFetching = (): {
@@ -11,7 +11,7 @@ export const usePostsFetching = (): {
     customMockEnabled: apiConfig.postsReading.mock?.enabled,
     id: 'postsReading',
     messageGetterDict: apiConfig.postsReading.messageGetterDict,
-    schema: PostsSchema,
+    schema: PostsModelSchema,
     url: apiConfig.postsReading.getUrl(),
   }
 
