@@ -1,4 +1,4 @@
-import { FC, LegacyRef, useCallback, useEffect, useRef } from 'react'
+import { FC, LegacyRef, memo, useCallback, useEffect, useRef } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -126,4 +126,4 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
   )
 }
 
-export default withEmotionNaming(withRenderLog(PostEditor))
+export default memo(withEmotionNaming(withRenderLog(PostEditor)))

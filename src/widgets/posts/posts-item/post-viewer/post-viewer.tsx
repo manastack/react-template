@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 import {
   PropsWithEmotionNaming,
   withEmotionNaming,
@@ -44,4 +44,4 @@ const PostViewer: FC<PropsWithEmotionNaming<Props>> = ({
   </StyledPostViewer>
 )
 
-export default withEmotionNaming(withRenderLog(PostViewer))
+export default memo(withEmotionNaming(withRenderLog(PostViewer)))
