@@ -6,6 +6,7 @@ import {
 } from '@manauser/react-emotion-naming'
 import { withRenderLog } from '@manauser/react-render-log'
 
+import { Home } from '@pages/home'
 import { env } from '@shared/config'
 import { withProviders } from './providers'
 
@@ -15,7 +16,9 @@ import { GlobalStyles } from './styles/global.style'
 const App: FC<PropsWithEmotionNaming<{}>> = ({ setClassName }) => (
   <>
     <Global styles={GlobalStyles} />
-    <StyledApp className={setClassName('App')}>app</StyledApp>
+    <StyledApp className={setClassName('App')}>
+      <Home />
+    </StyledApp>
     <span style={{ display: 'none' }}>{env.VITE_TIMESTAMP}</span>
   </>
 )
