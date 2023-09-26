@@ -1,5 +1,2 @@
-export { FetchContext } from './fetch.context'
-export type { OwnFetchProviderProps } from './fetch.provider'
-export { FetchProvider } from './fetch.provider'
-export type { FetchContextValue } from './use.fetch'
+export type { UseFetchProps, FetchContextValue } from './use.fetch'
 export { useFetch } from './use.fetch'

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AxiosInstance, AxiosResponse } from 'axios'
+import { ZodTypeAny } from 'zod'
 
 import { useAxiosInstance } from './use.axios-instance'
 
@@ -9,14 +10,16 @@ export type FetchContextValue<Model extends unknown> = {
   isLoading: boolean
 }
 
-type UseFetchProps = {
-  url: string | null
+export type UseFetchProps = {
   customMockEnabled?: boolean
+  schema: ZodTypeAny
+  url: string | null
 }
 
-export const useFetch = <Dto, Model>({
-  url,
+export const useFetch = <Model extends unknown>({
   customMockEnabled = false,
+  schema,
+  url,
 }: UseFetchProps): FetchContextValue<Model> => {
   const [data, setData] = useState<Model | null>(null)
   const [hasError, setHasError] = useState<boolean>(false)
@@ -26,8 +29,7 @@ export const useFetch = <Dto, Model>({
 
   useEffect(() => {
     const fetchData = async (): Promise<Model | null> => {
-      console.log('>>> FetchProvider.fetchData') // eslint-disable-line no-console
-      const response: AxiosResponse<Dto> = await axiosInstance.get(url!)
+      const response: AxiosResponse<Model> = await axiosInstance.get(url!)
 
       if (response.status !== 200) {
         // todo: add logger as provider-props:
@@ -37,8 +39,7 @@ export const useFetch = <Dto, Model>({
         return null
       }
 
-      // todo: should add dto parsing to model:
-      return (response.data as unknown) as Model
+      return schema.parse(response.data) as Model
     }
 
     if (!url) return
@@ -52,7 +53,7 @@ export const useFetch = <Dto, Model>({
       })
       .catch(() => setHasError(true))
       .finally(() => setIsLoading(false))
-  }, [axiosInstance, url])
+  }, [axiosInstance, schema, url])
 
   return { data, hasError, isLoading }
 }

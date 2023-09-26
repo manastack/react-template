@@ -1,18 +1,22 @@
-import { useFetch } from '@shared/lib/fetch'
-import { PostsItemDto, PostsItemModel } from './post.model'
+import { PostsModel, PostsSchema } from 'src/entities/post/posts.model'
+
+import { useFetch, UseFetchProps } from '@shared/lib/fetch'
 
 export const usePostsFetching = (): {
   hasPostsError: boolean
   isPostsLoading: boolean
-  posts: PostsItemModel[] | null
+  posts: PostsModel | null
 } => {
+  const useFetchProps: UseFetchProps = {
+    schema: PostsSchema,
+    url: 'https://jsonplaceholder.typicode.com/posts',
+  }
+
   const {
     data: posts,
     isLoading: isPostsLoading,
     hasError: hasPostsError,
-  } = useFetch<PostsItemDto[], PostsItemModel[]>({
-    url: 'https://jsonplaceholder.typicode.com/posts',
-  })
+  } = useFetch<PostsModel>(useFetchProps)
 
   return { hasPostsError, isPostsLoading, posts }
 }

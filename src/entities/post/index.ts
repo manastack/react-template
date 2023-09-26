@@ -1,2 +1,1 @@
-export type { PostsItemModel } from './post.model'
-export { usePostsFetching } from './use.posts-fetching'
+export { usePostsFetching } from 'src/entities/post/use.posts-fetching'
