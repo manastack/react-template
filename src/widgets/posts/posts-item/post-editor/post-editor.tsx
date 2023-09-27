@@ -51,9 +51,14 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
     resolver: zodResolver(validationSchema),
   })
 
-  const { isLoading, mutate: updatePost } = usePostUpdating({ id })
-
   const queryClient = useQueryClient()
+
+  const { isLoading, mutate: updatePost } = usePostUpdating({
+    callback: () => {
+      queryClient.invalidateQueries(['postsReading']).then(closePostEditor)
+    },
+    id,
+  })
 
   const nameInput: LegacyRef<HTMLInputElement> | undefined = useRef(null)
   const { ref: nameRef, ...nameRest } = register('name')
@@ -61,10 +66,8 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
   const onSubmit: SubmitHandler<ValidationSchema> = useCallback(
     (data) => {
       updatePost(parsePostsItemModelToDto({ ...data, id, userId }))
-      queryClient.invalidateQueries(['postsReading']).then(() => {})
-      closePostEditor()
     },
-    [closePostEditor, id, queryClient, updatePost, userId],
+    [id, updatePost, userId],
   )
 
   useEffect(() => {
@@ -81,6 +84,7 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
           'bg-red': errors.name,
         })}
         defaultValue={name}
+        disabled={isLoading}
         id="name"
         placeholder="Title of the post"
         ref={(event) => {
@@ -100,6 +104,7 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
           'bg-red': errors.body,
         })}
         defaultValue={body}
+        disabled={isLoading}
         id="body"
         placeholder="Body of the post"
         rows={3}
@@ -114,6 +119,7 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
       <StyledToolbar className={setClassName('Toolbar')}>
         <ButtonSymbol
           className="text-[0.7rem] !text-red-500"
+          disabled={isLoading}
           handleClick={closePostEditor}
           label="cancel"
           renderLogId={`post-editor.cancel.${id}`}

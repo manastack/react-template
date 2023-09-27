@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { MutationFunction, useMutation } from '@tanstack/react-query'
 import { UseMutationResult } from '@tanstack/react-query/src/types'
 import { AxiosInstance, AxiosResponse } from 'axios'
 
@@ -8,12 +8,14 @@ import { useApiListeners } from './use.api-listeners'
 import { useAxiosInstance } from './use.axios-instance'
 
 export type UseUpdatingProps = {
+  callback?: () => void | Promise<void>
   customMockEnabled?: boolean
   messageGetterDict: ApiMessageGetterDict
   url: string
 }
 
 export const useUpdating = <ReturningData = void, PostingData = void>({
+  callback,
   customMockEnabled = false,
   messageGetterDict,
   url,
@@ -24,7 +26,7 @@ export const useUpdating = <ReturningData = void, PostingData = void>({
     messageGetterDict,
   })
 
-  const queryFn: (p: PostingData) => Promise<ReturningData> = useCallback(
+  const queryFn: MutationFunction<ReturningData, PostingData> = useCallback(
     async (postingData: PostingData): Promise<ReturningData> => {
       onLoading()
       try {
@@ -35,13 +37,14 @@ export const useUpdating = <ReturningData = void, PostingData = void>({
 
         const responseData: ReturningData = response.data
         onSuccess()
+        callback?.()
         return responseData
       } catch (error) {
         onError('error by data posting')
         throw error
       }
     },
-    [axiosInstance, onError, onLoading, onSuccess, url],
+    [axiosInstance, callback, onError, onLoading, onSuccess, url],
   )
 
   return useMutation<ReturningData, Error, PostingData>(queryFn)

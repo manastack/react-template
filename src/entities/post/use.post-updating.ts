@@ -5,12 +5,14 @@ import { useUpdating, UseUpdatingProps } from '@shared/lib/api'
 import { PostsItemDto, PostsItemModel } from './posts.model'
 
 type UsePostUpdating = (p: {
+  callback?: () => void | Promise<void>
   id: PostsItemModel['id']
 }) => UseMutationResult<void, Error, PostsItemDto>
 
-export const usePostUpdating: UsePostUpdating = ({ id }) => {
+export const usePostUpdating: UsePostUpdating = ({ callback, id }) => {
   const { getUrl, messageGetterDict, mock } = apiConfig.postUpdating
   const props: UseUpdatingProps = {
+    callback,
     customMockEnabled: mock?.enabled,
     messageGetterDict,
     url: getUrl(id),
