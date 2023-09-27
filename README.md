@@ -1,4 +1,4 @@
-# react-federation-vite-template
+# react-template
 
 ---
 
@@ -90,12 +90,7 @@ See [Vite Configuration Reference](https://vitejs.dev/config/).
     "typescriptreact": "javascript"
   },
   "files": {
-    "exclude": [
-      "**/.git/**",
-      "**/node_modules/**",
-      "**/.hg/**",
-      "**/.svn/**"
-    ]
+    "exclude": ["**/.git/**", "**/node_modules/**", "**/.hg/**", "**/.svn/**"]
   },
   "emmetCompletions": false,
   "classAttributes": ["class", "className", "ngClass", "tw"],
