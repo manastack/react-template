@@ -8,7 +8,11 @@ This is a simple React app using Vite. It includes the following:
 
 - [x] [Emotion](https://emotion.sh/docs/introduction)
 - [x] [ESLint](https://eslint.org/)
+- [x] [Jest](https://jestjs.io/)
 - [x] [Prettier](https://prettier.io/)
+- [x] [React](https://reactjs.org/)
+- [x] [React-Query](https://react-query.tanstack.com/)
+- [x] [React-Testing-Library](https://testing-library.com/docs/react-testing-library/intro/)
 - [x] [Stylelint](https://stylelint.io/)
 - [x] [TailwindCSS](https://tailwindcss.com/)
 - [x] [Twin.Macro](https://www.npmjs.com/package/twin.macro)
