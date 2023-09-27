@@ -19,12 +19,17 @@ This is a simple React app using Vite. It includes the following:
 - [x] [TypeScript](https://www.typescriptlang.org/)
 - [x] [Vite](https://vitejs.dev/)
 - [x] [Vitest](https://github.com/vitest-dev/vitest#readme)
+- [x] [Zod](https://zod.dev/)
 
 ## Requirements
 
 - [Node Version Manager](https://github.com/nvm-sh/nvm)
 
 ## Usage
+
+### Setup environment
+
+Copy `.env.local.example` to `.env.local` and update the values as needed.
 
 ### Project setup
 
@@ -77,7 +82,7 @@ pnpm preview
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## TailWind's Config for WebStorm
+### TailWind's Config for WebStorm
 
 ```json
 {
