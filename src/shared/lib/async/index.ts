@@ -1,1 +1,1 @@
-export { withDelay } from './delay'
+export { delay, withDelay } from './delay'

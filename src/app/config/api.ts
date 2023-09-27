@@ -13,6 +13,7 @@ export const apiConfig: Record<QueryKey, ApiItemConfig> = {
       success: () => 'Post updated successfully',
     },
     mock: {
+      delay: 3000,
       enabled: true,
       getUrl: () => /https:\/\/jsonplaceholder.typicode.com\/posts\/\d+/,
       loader: () => import('../../entities/post/posts.mock'),
@@ -29,6 +30,7 @@ export const apiConfig: Record<QueryKey, ApiItemConfig> = {
       success: () => 'Posts fetched successfully',
     },
     mock: {
+      delay: 1000,
       enabled: true,
       getUrl: () => 'https://jsonplaceholder.typicode.com/posts',
       loader: () => import('../../entities/post/posts.mock'),

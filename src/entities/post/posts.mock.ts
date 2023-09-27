@@ -1,6 +1,6 @@
 import { apiConfig } from '@app/config'
 import { mockAdapter, MockStore } from '@shared/lib/api'
-import { withDelay } from '@shared/lib/async'
+import { delay, withDelay } from '@shared/lib/async'
 import { PostsDto, PostsItemDto } from './posts.model'
 
 const mock = () => {
@@ -30,16 +30,20 @@ const mock = () => {
   const { postUpdating, postsReading } = apiConfig
 
   postsReading.mock?.enabled &&
-    postsReading.mock?.getUrl &&
+    postsReading.mock.getUrl &&
     mockAdapter
       .onGet(postsReading.mock.getUrl())
-      .reply(withDelay([200, postsMockStore.data], 1000))
+      .reply(
+        withDelay([200, postsMockStore.data], postsReading.mock.delay ?? 0),
+      )
 
   postUpdating.mock?.enabled &&
-    postUpdating.mock?.getUrl &&
-    mockAdapter.onPut(postUpdating.mock.getUrl()).reply((config) => {
+    postUpdating.mock.getUrl &&
+    mockAdapter.onPut(postUpdating.mock.getUrl()).reply(async (config) => {
       const dto = JSON.parse(config.data) as PostsItemDto
       const post = postsMockStore.data?.find(({ id }) => id === dto.id)
+
+      await delay(postUpdating.mock?.delay ?? 0)
 
       if (!post) {
         return [404]
