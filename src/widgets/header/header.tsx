@@ -1,7 +1,7 @@
 import { FC } from 'react'
-import reactLogo from '@assets/images/react.svg'
 import { withRenderLog } from '@manauser/react-render-log'
 
+import reactLogo from '@assets/images/react.svg'
 import { usePostsFetching } from '@entities/post'
 
 const Header: FC = () => {
