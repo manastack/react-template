@@ -10,35 +10,35 @@ import { useApiListeners } from './use.api-listeners'
 import { useAxiosInstance } from './use.axios-instance'
 
 export type UseFetchingProps<
-  Output extends any,
+  Model extends any,
   Def extends ZodTypeDef = ZodTypeDef,
-  Input = Output
+  Dto = Model
 > = {
   customMockEnabled?: boolean
   id: string // todo: change to QueryKey
   messageGetterDict: ApiMessageGetterDict
-  schema: ZodType<Output, Def, Input>
+  schema: ZodType<Model, Def, Dto>
   url: string
 }
 
 export const useFetching = <
-  Output extends any,
+  Model extends any,
   Def extends ZodTypeDef = ZodTypeDef,
-  Input = Output
+  Dto = Model
 >({
   customMockEnabled = false,
   id,
   messageGetterDict,
   schema,
   url,
-}: UseFetchingProps<Output, Def, Input>): UseQueryResult<Output> => {
+}: UseFetchingProps<Model, Def, Dto>): UseQueryResult<Model> => {
   const axiosInstance: AxiosInstance = useAxiosInstance(customMockEnabled)
 
   const { onError, onLoading, onSuccess } = useApiListeners({
     messageGetterDict,
   })
 
-  const queryFn = useCallback(async (): Promise<Output> => {
+  const queryFn = useCallback(async (): Promise<Model> => {
     onLoading()
     try {
       const response: AxiosResponse = await axiosInstance.get(url)
@@ -65,5 +65,5 @@ export const useFetching = <
     }
   }, [axiosInstance, onError, onLoading, onSuccess, schema, url])
 
-  return useQuery<Output>([id], queryFn)
+  return useQuery<Model>([id], queryFn)
 }
