@@ -53,10 +53,7 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
 
   const queryClient = useQueryClient()
 
-  const { isLoading, mutate: updatePost } = usePostUpdating({
-    callback: () => {
-      queryClient.invalidateQueries(['postsReading']).then(closePostEditor)
-    },
+  const { isLoading, isSuccess, mutate: updatePost } = usePostUpdating({
     id,
   })
 
@@ -69,6 +66,11 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
     },
     [id, updatePost, userId],
   )
+
+  useEffect(() => {
+    isSuccess &&
+      queryClient.invalidateQueries(['postsReading']).then(closePostEditor)
+  }, [closePostEditor, isSuccess, queryClient])
 
   useEffect(() => {
     nameInput.current?.focus()
