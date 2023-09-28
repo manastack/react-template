@@ -7,7 +7,7 @@ import { PostsItemDto, PostsItemModel } from './posts.model'
 type UsePostUpdating = (p: {
   callback?: () => void | Promise<void>
   id: PostsItemModel['id']
-}) => UseMutationResult<void, Error, PostsItemDto>
+}) => UseMutationResult<PostsItemDto, Error, PostsItemDto>
 
 export const usePostUpdating: UsePostUpdating = ({ callback, id }) => {
   const { getUrl, messageGetterDict, mock } = apiConfig.postUpdating
@@ -18,7 +18,7 @@ export const usePostUpdating: UsePostUpdating = ({ callback, id }) => {
     url: getUrl(id),
   }
 
-  return useUpdating<void, PostsItemDto>(props)
+  return useUpdating<PostsItemDto, PostsItemDto>(props)
 }
 
 export const parsePostsItemModelToDto = ({

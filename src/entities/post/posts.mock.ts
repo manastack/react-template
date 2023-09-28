@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from 'axios'
+
 import { apiConfig } from '@app/config'
 import { mockAdapter, MockStore } from '@shared/lib/api'
 import { delay, withDelay } from '@shared/lib/async'
@@ -39,21 +41,25 @@ const mock = () => {
 
   postUpdating.mock?.enabled &&
     postUpdating.mock.getUrl &&
-    mockAdapter.onPut(postUpdating.mock.getUrl()).reply(async (config) => {
-      const dto = JSON.parse(config.data) as PostsItemDto
-      const post = postsMockStore.data?.find(({ id }) => id === dto.id)
+    mockAdapter.onPut(postUpdating.mock.getUrl()).reply(
+      async ({
+        data,
+      }: AxiosRequestConfig): Promise<[number, PostsItemDto?]> => {
+        const dto = JSON.parse(data) as PostsItemDto
+        const post = postsMockStore.data?.find(({ id }) => id === dto.id)
 
-      await delay(postUpdating.mock?.delay ?? 0)
+        await delay(postUpdating.mock?.delay ?? 0)
 
-      if (!post) {
-        return [404]
-      }
+        if (!post) {
+          return [404]
+        }
 
-      post.body = dto.body
-      post.title = dto.title
+        post.body = dto.body
+        post.title = dto.title
 
-      return [200]
-    })
+        return [200, dto]
+      },
+    )
 }
 
 mock()
