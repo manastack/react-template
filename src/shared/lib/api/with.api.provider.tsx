@@ -1,13 +1,16 @@
 import { ComponentType } from 'react'
 
-import { OwnApiProviderProps, WithApiProvider } from './api.model'
 import ApiProvider from './api.provider'
+import { OwnApiProviderProps, WithApiProvider } from './api.types'
 
-export const withApiProvider: WithApiProvider = function <Props extends {}>(
-  this: OwnApiProviderProps,
+export const withApiProvider: WithApiProvider = function <
+  MainQueryKey extends string,
+  Props extends {}
+>(
+  this: OwnApiProviderProps<MainQueryKey>,
   Component: ComponentType<Props>,
 ): ComponentType<Props> {
-  const ownApiProviderProps: OwnApiProviderProps = this
+  const ownApiProviderProps: OwnApiProviderProps<MainQueryKey> = this
 
   return (props: Props) => (
     <ApiProvider {...ownApiProviderProps}>

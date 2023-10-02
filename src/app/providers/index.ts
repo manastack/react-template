@@ -10,7 +10,7 @@ import { enqueueSnackbar } from 'notistack'
 
 import { OwnApiProviderProps, withApiProvider } from '@shared/lib/api'
 import { withSnackbarProvider } from '@shared/lib/snackbar'
-import { envConfig, EnvKey } from '../config'
+import { apiConfig, envConfig, EnvKey, MainQueryKey } from '../config'
 
 const ownEmotionNamingProviderProps: OwnEmotionNamingProviderProps = {
   debugEnabled: import.meta.env.MODE !== 'production',
@@ -26,7 +26,9 @@ const ownEnvProviderProps: OwnEnvProviderProps<EnvKey> = {
   envConfig,
 }
 
-const ownApiProviderProps: OwnApiProviderProps = {
+const ownApiProviderProps: OwnApiProviderProps<MainQueryKey> = {
+  config: apiConfig,
+  globalMockEnabled: import.meta.env.VITE_MOCK_ENABLED === 'true',
   isTest: import.meta.env.MODE === 'test',
   logger: {
     error: [
@@ -39,8 +41,11 @@ const ownApiProviderProps: OwnApiProviderProps = {
       (p: string) => enqueueSnackbar(p, { variant: 'success' }),
     ],
   },
+  queryDevtoolsEnabled:
+    import.meta.env.VITE_REACT_QUERY_DEVTOOLS_ENABLED === 'true',
 }
 
+// todo: add ability to use context one provider in another (take out env provider from api provider etc)
 export const withProviders = compose(
   withSnackbarProvider,
   withEmotionNamingProvider.bind(ownEmotionNamingProviderProps),

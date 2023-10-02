@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { QueryStatus } from '@tanstack/react-query'
 
 import { Logger, useLogger } from '@shared/lib/logger'
-import { ApiMessageGetterDict } from './api.model'
+import { ApiMessageGetterDict } from './api.types'
 
 type ApiListener = (details?: string) => void
 
@@ -15,6 +15,7 @@ type UseApiListeners = (props: {
 }
 
 export const useApiListeners: UseApiListeners = ({ messageGetterDict }) => {
+  // todo: get the logger from api-context and remove dependency from logger-provider
   const logger: Logger<QueryStatus> = useLogger<QueryStatus>()
 
   const onEvent = useCallback(

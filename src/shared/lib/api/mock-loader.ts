@@ -1,10 +1,10 @@
-import { ApiItemConfig } from './api.model'
+import { ApiConfig } from './api.types'
 
-const loadMock = (
-  apiConfig: Record<string, ApiItemConfig>,
+const loadMock = <MainQueryKey extends string>(
+  apiConfig: ApiConfig<MainQueryKey>,
 ): Promise<unknown[]> =>
   Promise.all(
-    Object.keys(apiConfig).map(async (key) =>
+    (Object.keys(apiConfig) as MainQueryKey[]).map(async (key) =>
       apiConfig[key].mock?.enabled
         ? apiConfig[key].mock!.loader()
         : Promise.resolve(),

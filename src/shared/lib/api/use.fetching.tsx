@@ -1,54 +1,74 @@
-import { useCallback } from 'react'
-import { useQuery, UseQueryResult } from '@tanstack/react-query'
-import { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
-import { ZodType } from 'zod'
-import { ZodTypeDef } from 'zod/lib/types'
+import { useCallback, useContext } from 'react'
+import { QueryFunction, useQuery, UseQueryResult } from '@tanstack/react-query'
+import {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from 'axios'
+import { ErrorDataParsing } from 'src/shared/lib/api/error.data-parsing'
+import { ZodType, ZodTypeDef } from 'zod'
 
-import { ApiMessageGetterDict } from './api.model'
-import { ErrorResponseParsing } from './error.response-parsing'
+import { ApiContext } from './api.context'
 import { useApiListeners } from './use.api-listeners'
 import { useAxiosInstance } from './use.axios-instance'
 
-export type UseFetchingProps<
-  Model extends any,
-  Def extends ZodTypeDef = ZodTypeDef,
-  Dto = Model
-> = {
-  customMockEnabled?: boolean
-  id: string // todo: change to QueryKey
-  messageGetterDict: ApiMessageGetterDict
-  schema: ZodType<Model, Def, Dto>
-  url: string
+export type UseFetchingProps<QueryKey extends (string | number)[]> = {
+  urlParams?: (string | number)[]
+  queryKey: QueryKey
 }
 
 export const useFetching = <
-  Model extends any,
-  Def extends ZodTypeDef = ZodTypeDef,
-  Dto = Model
+  QueryKey extends (string | number)[],
+  ResponseModel extends any,
+  ResponseDef extends ZodTypeDef = ZodTypeDef,
+  ResponseDto = ResponseModel
 >({
-  customMockEnabled = false,
-  id,
-  messageGetterDict,
-  schema,
-  url,
-}: UseFetchingProps<Model, Def, Dto>): UseQueryResult<Model> => {
-  const axiosInstance: AxiosInstance = useAxiosInstance(customMockEnabled)
+  urlParams = [],
+  queryKey,
+}: UseFetchingProps<QueryKey>): UseQueryResult<ResponseModel> => {
+  const { config: apiConfig, globalMockEnabled = false } = useContext(
+    ApiContext,
+  )
+
+  const { getUrl, messageGetterDict, method, mock } = apiConfig[queryKey[0]]
+  const responseSchema = apiConfig[queryKey[0]].responseSchema as ZodType<
+    ResponseModel,
+    ResponseDef,
+    ResponseDto
+  >
+
+  const axiosInstance: AxiosInstance = useAxiosInstance({
+    mockEnabled: globalMockEnabled && !!mock?.enabled,
+  })
 
   const { onError, onLoading, onSuccess } = useApiListeners({
     messageGetterDict,
   })
 
-  const queryFn = useCallback(async (): Promise<Model> => {
+  const queryFn: QueryFunction<
+    ResponseModel,
+    QueryKey
+  > = useCallback(async (): Promise<ResponseModel> => {
+    // todo: take out to common api-hook
     onLoading()
+
     try {
-      const response: AxiosResponse = await axiosInstance.get(url)
+      const response: AxiosResponse<ResponseDto> = await axiosInstance({
+        method,
+        url: getUrl(urlParams),
+      } as AxiosRequestConfig)
 
       try {
-        const data = schema.parse(response.data)
+        const modelData = responseSchema.parse(response.data) as ResponseModel
+
         onSuccess()
-        return data
+        return modelData
       } catch (error) {
-        throw new ErrorResponseParsing('error by data parsing')
+        // todo: remake it without exception
+        throw new ErrorDataParsing(
+          'error by response-data parsing (dto to model)',
+        )
       }
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -56,14 +76,26 @@ export const useFetching = <
         throw error
       }
 
-      if (error instanceof ErrorResponseParsing) {
+      if (error instanceof ErrorDataParsing) {
         onError(error.message)
         throw error
       }
 
       throw error
     }
-  }, [axiosInstance, onError, onLoading, onSuccess, schema, url])
+  }, [
+    axiosInstance,
+    getUrl,
+    method,
+    onError,
+    onLoading,
+    onSuccess,
+    responseSchema,
+    urlParams,
+  ])
 
-  return useQuery<Model>([id], queryFn)
+  return useQuery<ResponseModel, Error, ResponseModel, QueryKey>(
+    queryKey,
+    queryFn,
+  )
 }

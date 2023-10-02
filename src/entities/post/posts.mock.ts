@@ -2,11 +2,11 @@ import { AxiosRequestConfig } from 'axios'
 
 import { apiConfig } from '@app/config'
 import { mockAdapter, MockStore } from '@shared/lib/api'
-import { delay, withDelay } from '@shared/lib/async'
-import { PostsDto, PostsItemDto } from './posts.model'
+import { delay as wait, withDelay } from '@shared/lib/async'
+import { PostsItemReadingDto, PostsReadingDto } from './posts.types'
 
 const mock = () => {
-  const PostsMock: PostsDto = [
+  const PostsMock: PostsReadingDto = [
     {
       body: 'body 1',
       id: 1,
@@ -27,39 +27,49 @@ const mock = () => {
     },
   ]
 
-  const postsMockStore = new MockStore<PostsDto>(PostsMock)
+  const postsMockStore = new MockStore<PostsReadingDto>(PostsMock)
 
   const { postUpdating, postsReading } = apiConfig
 
-  postsReading.mock?.enabled &&
-    postsReading.mock.getUrl &&
-    mockAdapter
-      .onGet(postsReading.mock.getUrl())
-      .reply(
-        withDelay([200, postsMockStore.data], postsReading.mock.delay ?? 0),
+  // postsReading:
+  // todo: take out this fn to MockStore
+  ;((store) => {
+    const { enabled, getUrl, delay } = postsReading.mock ?? {}
+    enabled &&
+      getUrl &&
+      mockAdapter
+        .onGet(getUrl())
+        .reply(withDelay([200, store.data], delay ?? 0))
+  })(postsMockStore)
+
+  // postUpdating:
+  // todo: take out this fn to MockStore
+  ;((store) => {
+    const { enabled, getUrl, delay } = postUpdating.mock ?? {}
+
+    enabled &&
+      getUrl &&
+      mockAdapter.onPut(getUrl()).reply(
+        async ({
+          data,
+        }: AxiosRequestConfig): Promise<[number, PostsItemReadingDto?]> => {
+          const dto = JSON.parse(data) as PostsItemReadingDto
+
+          const post = store.data?.find(({ id }) => id === dto.id)
+
+          await wait(delay ?? 0)
+
+          if (!post) {
+            return [404]
+          }
+
+          post.body = dto.body
+          post.title = dto.title
+
+          return [200, dto]
+        },
       )
-
-  postUpdating.mock?.enabled &&
-    postUpdating.mock.getUrl &&
-    mockAdapter.onPut(postUpdating.mock.getUrl()).reply(
-      async ({
-        data,
-      }: AxiosRequestConfig): Promise<[number, PostsItemDto?]> => {
-        const dto = JSON.parse(data) as PostsItemDto
-        const post = postsMockStore.data?.find(({ id }) => id === dto.id)
-
-        await delay(postUpdating.mock?.delay ?? 0)
-
-        if (!post) {
-          return [404]
-        }
-
-        post.body = dto.body
-        post.title = dto.title
-
-        return [200, dto]
-      },
-    )
+  })(postsMockStore)
 }
 
 mock()

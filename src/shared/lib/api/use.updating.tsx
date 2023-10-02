@@ -1,51 +1,125 @@
-import { useCallback } from 'react'
+import { useCallback, useContext } from 'react'
 import { MutationFunction, useMutation } from '@tanstack/react-query'
 import { UseMutationResult } from '@tanstack/react-query/src/types'
-import { AxiosInstance, AxiosResponse } from 'axios'
+import {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from 'axios'
+import { ZodType, ZodTypeDef } from 'zod'
 
-import { ApiMessageGetterDict } from './api.model'
+import { ApiContext } from './api.context'
+import { ApiItemConfigMutation } from './api.types'
+import { ErrorDataParsing } from './error.data-parsing'
 import { useApiListeners } from './use.api-listeners'
 import { useAxiosInstance } from './use.axios-instance'
 
-export type UseUpdatingProps = {
+export type UseUpdatingProps<QueryKey extends (string | number)[]> = {
   callback?: () => void | Promise<void>
-  customMockEnabled?: boolean
-  messageGetterDict: ApiMessageGetterDict
-  url: string
+  urlParams?: (string | number)[]
+  queryKey: QueryKey
 }
 
-export const useUpdating = <ReturningData = void, PostingData = void>({
+export const useUpdating = <
+  QueryKey extends (string | number)[], // todo - remove it
+  RequestModel extends any,
+  RequestDef extends ZodTypeDef,
+  RequestDto extends any,
+  ResponseModel extends any,
+  ResponseDef extends ZodTypeDef,
+  ResponseDto extends any
+>({
   callback,
-  customMockEnabled = false,
-  messageGetterDict,
-  url,
-}: UseUpdatingProps): UseMutationResult<ReturningData, Error, PostingData> => {
-  const axiosInstance: AxiosInstance = useAxiosInstance(customMockEnabled)
+  urlParams = [],
+  queryKey,
+}: UseUpdatingProps<QueryKey>): UseMutationResult<
+  ResponseModel,
+  Error,
+  RequestModel
+> => {
+  const { config: apiConfig, globalMockEnabled = false } = useContext(
+    ApiContext,
+  )
+
+  const { getUrl, messageGetterDict, method, mock } = apiConfig[queryKey[0]]
+  const responseSchema = apiConfig[queryKey[0]].responseSchema as ZodType<
+    ResponseModel,
+    ResponseDef,
+    ResponseDto
+  >
+
+  const requestSchema = (apiConfig[queryKey[0]] as ApiItemConfigMutation)
+    .requestSchema as ZodType<RequestDto, RequestDef, RequestModel>
+
+  const axiosInstance: AxiosInstance = useAxiosInstance({
+    mockEnabled: globalMockEnabled && !!mock?.enabled,
+  })
 
   const { onError, onLoading, onSuccess } = useApiListeners({
     messageGetterDict,
   })
 
-  const queryFn: MutationFunction<ReturningData, PostingData> = useCallback(
-    async (postingData: PostingData): Promise<ReturningData> => {
+  const mutationFn: MutationFunction<ResponseModel, RequestModel> = useCallback(
+    async (postingData: RequestModel): Promise<ResponseModel> => {
+      // todo: take out to common api-hook
       onLoading()
-      try {
-        const response: AxiosResponse<ReturningData> = await axiosInstance.put(
-          url,
-          postingData, // todo: add model to dto mapper
-        )
 
-        const responseData: ReturningData = response.data
-        onSuccess()
-        callback?.()
-        return responseData
+      try {
+        let data: RequestDto | null = null
+        try {
+          data = requestSchema.parse(postingData) as RequestDto
+        } catch (error) {
+          // todo: remake it without exception
+          throw new ErrorDataParsing(
+            'error by posting-data parsing (model to dto)',
+          )
+        }
+
+        const response: AxiosResponse<ResponseDto> = await axiosInstance({
+          data,
+          method,
+          url: getUrl(urlParams),
+        } as AxiosRequestConfig)
+
+        try {
+          const modelData = responseSchema.parse(response.data) as ResponseModel
+          callback?.()
+          onSuccess()
+          return modelData
+        } catch (error) {
+          // todo: remake it without exception
+          throw new ErrorDataParsing(
+            'error by response-data parsing (dto to model)',
+          )
+        }
       } catch (error) {
-        onError('error by data posting')
+        if (error instanceof AxiosError) {
+          onError('error by data posting')
+          throw error
+        }
+
+        if (error instanceof ErrorDataParsing) {
+          onError(error.message)
+          throw error
+        }
+
         throw error
       }
     },
-    [axiosInstance, callback, onError, onLoading, onSuccess, url],
+    [
+      axiosInstance,
+      callback,
+      getUrl,
+      method,
+      onError,
+      onLoading,
+      onSuccess,
+      requestSchema,
+      responseSchema,
+      urlParams,
+    ],
   )
 
-  return useMutation<ReturningData, Error, PostingData>(queryFn)
+  return useMutation(mutationFn)
 }

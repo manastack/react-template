@@ -7,13 +7,16 @@ import {
 } from '@manauser/react-emotion-naming'
 import { withRenderLog } from '@manauser/react-render-log'
 import { useQueryClient } from '@tanstack/react-query'
-import { z } from 'zod'
+import { z, ZodTypeDef } from 'zod'
 
+import { MainQueryKey } from '@app/config'
 import {
-  parsePostsItemModelToDto,
-  PostsItemModel,
-  usePostUpdating,
+  PostsItemReadingDto,
+  PostsItemReadingModel,
+  PostUpdatingDto,
+  PostUpdatingModel,
 } from '@entities/post'
+import { useUpdating } from '@shared/lib/api'
 import { ButtonSymbol } from '@shared/ui/button-symbol'
 
 import {
@@ -31,7 +34,7 @@ const validationSchema = z.object({
 
 type ValidationSchema = z.infer<typeof validationSchema>
 
-type Props = PostsItemModel & {
+type Props = PostsItemReadingModel & {
   closePostEditor: () => void
 }
 
@@ -51,10 +54,19 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
     resolver: zodResolver(validationSchema),
   })
 
-  const queryClient = useQueryClient()
+  type QueryKey = [MainQueryKey, number]
 
-  const { isLoading, isSuccess, mutate: updatePost } = usePostUpdating({
-    id,
+  const { isLoading, isSuccess, mutate: updatePost } = useUpdating<
+    QueryKey,
+    PostsItemReadingModel, // RequestModel
+    ZodTypeDef, // todo - remove
+    PostsItemReadingDto, // RequestDto
+    PostUpdatingModel, // ResponseModel
+    ZodTypeDef, // todo - remove
+    PostUpdatingDto // ResponseDto
+  >({
+    queryKey: ['postUpdating', id],
+    urlParams: [id],
   })
 
   const nameInput: LegacyRef<HTMLInputElement> | undefined = useRef(null)
@@ -62,10 +74,12 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
 
   const onSubmit: SubmitHandler<ValidationSchema> = useCallback(
     (data) => {
-      updatePost(parsePostsItemModelToDto({ ...data, id, userId }))
+      updatePost({ ...data, id, userId })
     },
     [id, updatePost, userId],
   )
+
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     isSuccess &&

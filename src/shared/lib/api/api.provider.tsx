@@ -1,5 +1,4 @@
-import { FC, PropsWithChildren, Suspense } from 'react'
-import { useEnvContext } from '@manauser/react-env'
+import { PropsWithChildren, Suspense, useEffect, useState } from 'react'
 import {
   DefaultOptions,
   QueryClient,
@@ -8,9 +7,9 @@ import {
 } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
-import { EnvKey } from '@app/config'
-import { LoggerProvider } from '@shared/lib/logger'
-import { OwnApiProviderProps } from './api.model'
+import { LoggerProvider } from '@shared/lib/logger' // todo: take out
+import { ApiContext } from './api.context'
+import { OwnApiProviderProps } from './api.types'
 
 const defaultOptions: DefaultOptions = {
   mutations: {
@@ -37,26 +36,50 @@ export const queryTestClient = new QueryClient({
   },
 })
 
-const ApiProvider: FC<PropsWithChildren<OwnApiProviderProps>> = ({
-  children,
-  isTest = false,
-  logger = { error: [], loading: [], success: [] },
-}) => {
+const ApiProvider = <MainQueryKey extends string>(
+  props: PropsWithChildren<OwnApiProviderProps<MainQueryKey>>,
+) => {
   const {
-    VITE_REACT_QUERY_DEVTOOLS_ENABLED: queryDevtoolsEnabled,
-  } = useEnvContext<EnvKey>()
+    children,
+    config,
+    globalMockEnabled = false,
+    isTest = false,
+    logger = { error: [], loading: [], success: [] },
+    queryDevtoolsEnabled = false,
+  } = props
+
+  const [mockDefined, setMockDefined] = useState<boolean>(false)
+
+  useEffect(() => {
+    ;(!isTest &&
+      globalMockEnabled &&
+      (async () => {
+        const { default: loadMock } = await import('./mock-loader')
+        await loadMock(config)
+        setMockDefined(true)
+      })()) ||
+      setMockDefined(true)
+  }, [config, globalMockEnabled, isTest])
+
+  const value = { config, globalMockEnabled }
+
+  if (!mockDefined) {
+    return null
+  }
 
   return (
-    <LoggerProvider<QueryStatus> {...{ logger }}>
-      <QueryClientProvider client={isTest ? queryTestClient : queryClient}>
-        {children}
-        {queryDevtoolsEnabled && (
-          <Suspense>
-            <ReactQueryDevtools />
-          </Suspense>
-        )}
-      </QueryClientProvider>
-    </LoggerProvider>
+    <ApiContext.Provider {...{ value }}>
+      <LoggerProvider<QueryStatus> {...{ logger }}>
+        <QueryClientProvider client={isTest ? queryTestClient : queryClient}>
+          {children}
+          {queryDevtoolsEnabled && (
+            <Suspense>
+              <ReactQueryDevtools />
+            </Suspense>
+          )}
+        </QueryClientProvider>
+      </LoggerProvider>
+    </ApiContext.Provider>
   )
 }
 

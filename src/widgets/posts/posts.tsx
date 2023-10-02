@@ -4,24 +4,36 @@ import {
   withEmotionNaming,
 } from '@manauser/react-emotion-naming'
 import { withRenderLog } from '@manauser/react-render-log'
+import { ZodTypeDef } from 'zod/lib/types'
 
-import { PostsItemModel, usePostsFetching } from '@entities/post'
+import { MainQueryKey } from '@app/config'
+import { PostsItemReadingModel } from '@entities/post'
+import { PostsReadingDto, PostsReadingModel } from '@entities/post/posts.types'
+import { useFetching } from '@shared/lib/api'
 import { PostEditor, PostViewer } from './posts-item'
 
 import { StyledPosts } from './posts.style'
 
 type Props = {}
 const Posts: FC<PropsWithEmotionNaming<Props>> = ({ setClassName }) => {
-  const { hasPostsError, isPostsLoading, posts } = usePostsFetching()
+  type QueryKey = [MainQueryKey]
+  const { data: posts, isError, isLoading } = useFetching<
+    QueryKey,
+    PostsReadingModel,
+    ZodTypeDef,
+    PostsReadingDto
+  >({
+    queryKey: ['postsReading'],
+  })
 
-  const [editedPostId, setEditedPostId] = useState<PostsItemModel['id'] | null>(
-    null,
-  )
+  const [editedPostId, setEditedPostId] = useState<
+    PostsItemReadingModel['id'] | null
+  >(null)
 
   return (
     <StyledPosts className={setClassName('Posts')}>
-      {isPostsLoading && <div>Loading...</div>}
-      {hasPostsError && <div>Error</div>}
+      {isLoading && <div>Loading...</div>}
+      {isError && <div>Error</div>}
       {posts?.map((post) => {
         if (editedPostId === post.id) {
           return (
