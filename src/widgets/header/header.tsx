@@ -15,7 +15,7 @@ const Header: FC = () => {
     ZodTypeDef,
     PostsReadingDto
   >({
-    queryKey: ['postsReading'],
+    queryKey: [MainQueryKey.postsReading],
   })
 
   return (

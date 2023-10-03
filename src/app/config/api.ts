@@ -6,10 +6,13 @@ import {
 import { ApiConfig } from '@shared/lib/api'
 
 // MainQueryKey is first item in query-key-list for one request (for example - ['postsReading', <page>, <filter>]):
-export type MainQueryKey = 'postUpdating' | 'postsReading' // todo - change to enum
+export enum MainQueryKey {
+  postUpdating = 'postUpdating',
+  postsReading = 'postsReading',
+}
 
 export const apiConfig: ApiConfig<MainQueryKey> = {
-  postUpdating: {
+  [MainQueryKey.postUpdating]: {
     getUrl: ((id: number) =>
       `https://jsonplaceholder.typicode.com/posts/${id}`) as (
       ...args: unknown[]
@@ -32,7 +35,7 @@ export const apiConfig: ApiConfig<MainQueryKey> = {
     requestSchema: PostUpdatingDtoSchema,
     responseSchema: PostsItemReadingDtoSchema,
   },
-  postsReading: {
+  [MainQueryKey.postsReading]: {
     getUrl: () => 'https://jsonplaceholder.typicode.com/posts',
     messageGetterDict: {
       error: (details) =>

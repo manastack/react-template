@@ -23,7 +23,7 @@ const Posts: FC<PropsWithEmotionNaming<Props>> = ({ setClassName }) => {
     ZodTypeDef,
     PostsReadingDto
   >({
-    queryKey: ['postsReading'],
+    queryKey: [MainQueryKey.postsReading],
   })
 
   const [editedPostId, setEditedPostId] = useState<

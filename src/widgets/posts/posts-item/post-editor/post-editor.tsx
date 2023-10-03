@@ -65,7 +65,7 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
     ZodTypeDef, // todo - remove
     PostUpdatingDto // ResponseDto
   >({
-    queryKey: ['postUpdating', id],
+    queryKey: [MainQueryKey.postUpdating, id],
     urlParams: [id],
   })
 
