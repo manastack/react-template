@@ -9,16 +9,24 @@ import compose from 'compose-function'
 import { enqueueSnackbar } from 'notistack'
 
 import { OwnApiProviderProps, withApiProvider } from '@shared/lib/api'
+import { colorConsoleLog } from '@shared/lib/logger'
 import { withSnackbarProvider } from '@shared/lib/snackbar'
 import { apiConfig, envConfig, EnvKey, MainQueryKey } from '../config'
 
+const debugEnabled = import.meta.env.MODE !== 'production'
+const isStrictMode = import.meta.env.MODE === 'development'
+const globalMockEnabled = import.meta.env.VITE_MOCK_ENABLED === 'true'
+const isTest = import.meta.env.MODE === 'test'
+const queryDevtoolsEnabled =
+  import.meta.env.VITE_REACT_QUERY_DEVTOOLS_ENABLED === 'true'
+
 const ownEmotionNamingProviderProps: OwnEmotionNamingProviderProps = {
-  debugEnabled: import.meta.env.MODE !== 'production',
+  debugEnabled,
 }
 
 const ownRenderLogProviderProps: OwnRenderLogProviderProps = {
-  debugEnabled: import.meta.env.MODE !== 'production',
-  isStrictMode: import.meta.env.MODE === 'development',
+  debugEnabled,
+  isStrictMode,
 }
 
 const ownEnvProviderProps: OwnEnvProviderProps<EnvKey> = {
@@ -28,21 +36,26 @@ const ownEnvProviderProps: OwnEnvProviderProps<EnvKey> = {
 
 const ownApiProviderProps: OwnApiProviderProps<MainQueryKey> = {
   config: apiConfig,
-  globalMockEnabled: import.meta.env.VITE_MOCK_ENABLED === 'true',
-  isTest: import.meta.env.MODE === 'test',
+  globalMockEnabled,
+  isTest,
   logger: {
     error: [
-      console.error, // eslint-disable-line no-console
       (p: string) => enqueueSnackbar(p, { variant: 'error' }),
+      ...(debugEnabled
+        ? [(message: string) => colorConsoleLog({ color: 'red', message })]
+        : []),
     ],
-    loading: [console.log], // eslint-disable-line no-console
+    loading: debugEnabled
+      ? [(message: string) => colorConsoleLog({ color: 'gray', message })]
+      : [],
     success: [
-      console.log, // eslint-disable-line no-console
       (p: string) => enqueueSnackbar(p, { variant: 'success' }),
+      ...(debugEnabled
+        ? [(message: string) => colorConsoleLog({ color: 'skyblue', message })]
+        : []),
     ],
   },
-  queryDevtoolsEnabled:
-    import.meta.env.VITE_REACT_QUERY_DEVTOOLS_ENABLED === 'true',
+  queryDevtoolsEnabled,
 }
 
 // todo: add ability to use context one provider in another (take out env provider from api provider etc)
