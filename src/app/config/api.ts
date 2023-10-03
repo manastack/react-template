@@ -26,8 +26,8 @@ export const apiConfig: ApiConfig<MainQueryKey> = {
     mock: {
       delay: 3000,
       enabled: true,
-      getUrl: () => /https:\/\/jsonplaceholder.typicode.com\/posts\/\d+/,
       loader: () => import('../../entities/post/posts.mock'),
+      url: /https:\/\/jsonplaceholder.typicode.com\/posts\/\d+/,
     },
     requestSchema: PostUpdatingDtoSchema,
     responseSchema: PostsItemReadingDtoSchema,
@@ -45,8 +45,8 @@ export const apiConfig: ApiConfig<MainQueryKey> = {
     mock: {
       delay: 1000,
       enabled: true,
-      getUrl: () => 'https://jsonplaceholder.typicode.com/posts',
       loader: () => import('../../entities/post/posts.mock'),
+      url: 'https://jsonplaceholder.typicode.com/posts',
     },
     responseSchema: PostsReadingModelSchema,
   },

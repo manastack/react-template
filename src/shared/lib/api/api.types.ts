@@ -17,8 +17,8 @@ type ApiItemConfigBase = {
   mock?: {
     delay?: number
     enabled: boolean
-    getUrl?: (...args: unknown[]) => string | RegExp // todo: change to just url
     loader: () => Promise<unknown>
+    url?: string | RegExp
   }
 }
 

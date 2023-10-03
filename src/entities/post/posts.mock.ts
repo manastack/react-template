@@ -34,22 +34,20 @@ const mock = () => {
   // postsReading:
   // todo: take out this fn to MockStore
   ;((store) => {
-    const { enabled, getUrl, delay } = postsReading.mock ?? {}
+    const { enabled, delay, url } = postsReading.mock ?? {}
     enabled &&
-      getUrl &&
-      mockAdapter
-        .onGet(getUrl())
-        .reply(withDelay([200, store.data], delay ?? 0))
+      url &&
+      mockAdapter.onGet(url).reply(withDelay([200, store.data], delay ?? 0))
   })(postsMockStore)
 
   // postUpdating:
   // todo: take out this fn to MockStore
   ;((store) => {
-    const { enabled, getUrl, delay } = postUpdating.mock ?? {}
+    const { enabled, delay, url } = postUpdating.mock ?? {}
 
     enabled &&
-      getUrl &&
-      mockAdapter.onPut(getUrl()).reply(
+      url &&
+      mockAdapter.onPut(url).reply(
         async ({
           data,
         }: AxiosRequestConfig): Promise<[number, PostsItemReadingDto?]> => {
