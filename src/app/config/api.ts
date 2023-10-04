@@ -13,8 +13,7 @@ export enum MainQueryKey {
 
 export const apiConfig: ApiConfig<MainQueryKey> = {
   [MainQueryKey.postUpdating]: {
-    getUrl: ((id: number) =>
-      `https://jsonplaceholder.typicode.com/posts/${id}`) as (
+    getUrl: ((id: number) => `/api/posts/${id}`) as (
       ...args: unknown[]
     ) => string,
 
@@ -27,16 +26,16 @@ export const apiConfig: ApiConfig<MainQueryKey> = {
     },
     method: 'put',
     mock: {
-      delay: 3000,
+      delay: 1000,
       enabled: true,
       loader: () => import('../../entities/post/posts.mock'),
-      url: /https:\/\/jsonplaceholder.typicode.com\/posts\/\d+/,
+      url: /api\/posts\/\d+/,
     },
     requestSchema: PostUpdatingDtoSchema,
     responseSchema: PostsItemReadingDtoSchema,
   },
   [MainQueryKey.postsReading]: {
-    getUrl: () => 'https://jsonplaceholder.typicode.com/posts',
+    getUrl: () => '/api/posts',
     messageGetterDict: {
       error: (details) =>
         `Error while fetching posts${details ? `: ${details}` : ''}`,
@@ -46,10 +45,10 @@ export const apiConfig: ApiConfig<MainQueryKey> = {
     },
     method: 'get',
     mock: {
-      delay: 1000,
+      delay: 500,
       enabled: true,
       loader: () => import('../../entities/post/posts.mock'),
-      url: 'https://jsonplaceholder.typicode.com/posts',
+      url: '/api/posts',
     },
     responseSchema: PostsReadingModelSchema,
   },

@@ -6,7 +6,18 @@ export default defineConfig(({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
   console.log('mode:', mode) // eslint-disable-line no-console
 
+  let proxy = process.env.VITE_PROXY
+
+  if (!proxy) {
+    throw new Error('VITE_PROXY is not defined')
+  }
+
+  if (proxy[proxy.length - 1] !== '/') {
+    proxy += '/'
+  }
+
   return {
+    base: '/',
     build: {
       minify: mode === 'production',
       outDir: 'build',
@@ -50,6 +61,17 @@ export default defineConfig(({ mode }) => {
       tsconfigPaths(),
       splitVendorChunkPlugin(),
     ],
+    server: {
+      open: true,
+      proxy: {
+        '/api': {
+          changeOrigin: true,
+          rewrite: (path) => `${path.replace(/^\/api/, '')}`,
+          secure: false,
+          target: proxy,
+        },
+      },
+    },
     test: {
       coverage: {
         all: true,
