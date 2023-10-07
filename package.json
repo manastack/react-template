@@ -6,7 +6,7 @@
     "pnpm": "8"
   },
   "scripts": {
-    "preinstall": "./scripts/nvm-use.sh",
+    "presetup": "./scripts/nvm-use.sh",
     "setup": "pnpm i && pnpm audit",
     "dev": "vite --port 3555",
     "lint:styles": "stylelint --fix 'src/**/**.{css,style.js,style.ts}'",
@@ -16,8 +16,9 @@
     "test:ui": "vitest --mode=test --passWithNoTests --ui",
     "test:ci": "vitest --mode=test --passWithNoTests --run",
     "test:coverage": "vitest --coverage --mode=test --passWithNoTests --run",
+    "build:dev": "tsc && vite build --mode=dev",
     "build:stage": "tsc && vite build --mode=dev",
-    "build:production": "tsc && vite build",
+    "build:main": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
