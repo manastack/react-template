@@ -1,5 +1,7 @@
 # react-template
 
+[![Testing and Build](https://github.com/manastack/react-template/actions/workflows/test.yml/badge.svg)](https://github.com/manastack/react-template/actions/workflows/test.yml)
+
 ---
 
 ## Description
