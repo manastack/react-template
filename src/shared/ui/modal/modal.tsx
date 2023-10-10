@@ -1,35 +1,27 @@
-import { FC, PropsWithChildren } from 'react'
+import { FC, memo, PropsWithChildren } from 'react'
 import {
   PropsWithEmotionNaming,
   withEmotionNaming,
 } from '@manauser/react-emotion-naming'
 import { withRenderLog } from '@manauser/react-render-log'
 
-import { StyledModal, StyledModalContainer } from './modal.style'
+import { PropsWithModal, withModal } from './with.modal'
 
-type OwnProps = {
-  hidden: boolean
-  setHidden: (hidden: boolean) => void
-}
+import { StyledModalContainer } from './modal.style'
 
-const Modal: FC<PropsWithEmotionNaming<PropsWithChildren<OwnProps>>> = ({
+const Modal: FC<PropsWithModal<PropsWithEmotionNaming<PropsWithChildren>>> = ({
   children,
-  hidden,
   setClassName,
   setHidden,
 }) => (
   <StyledModalContainer
     className={setClassName('ModalContainer')}
-    {...{ hidden }}
     onClick={() => setHidden(true)}
   >
-    <StyledModal
-      className={setClassName('Modal')}
-      onClick={(e) => e.stopPropagation()}
-    >
+    <div className={setClassName('Modal')} onClick={(e) => e.stopPropagation()}>
       {children}
-    </StyledModal>
+    </div>
   </StyledModalContainer>
 )
 
-export default withEmotionNaming(withRenderLog(Modal))
+export default memo(withModal(withEmotionNaming(withRenderLog(Modal))))

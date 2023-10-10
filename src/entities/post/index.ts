@@ -7,4 +7,6 @@ export type {
   PostUpdatingDtoSchema,
   PostUpdatingModel,
   PostUpdatingModelSchema,
+  PostCreatingDto,
+  PostCreatingModel,
 } from './posts.types'

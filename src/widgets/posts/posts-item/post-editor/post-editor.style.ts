@@ -4,7 +4,7 @@ import tw from 'twin.macro'
 
 import { StyledPostsItem, StyledPostsItemBody } from '../posts-item.style'
 
-export const StyledPostEditor = styled.form`
+export const StyledPostEditor = styled.div`
   ${StyledPostsItem};
   ${tw`m-0 bg-blue-900 text-blue-300`};
 `

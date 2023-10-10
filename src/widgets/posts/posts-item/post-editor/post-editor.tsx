@@ -11,6 +11,8 @@ import { z, ZodTypeDef } from 'zod'
 
 import { MainQueryKey } from '@app/config'
 import {
+  PostCreatingDto,
+  PostCreatingModel,
   PostsItemReadingDto,
   PostsItemReadingModel,
   PostUpdatingDto,
@@ -34,14 +36,15 @@ const validationSchema = z.object({
 
 type ValidationSchema = z.infer<typeof validationSchema>
 
-type Props = PostsItemReadingModel & {
+type Props = Omit<PostsItemReadingModel, 'id'> & {
   closePostEditor: () => void
+  id?: number
 }
 
 const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
   body,
   closePostEditor,
-  id,
+  id = null,
   name,
   setClassName,
   userId,
@@ -54,29 +57,33 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
     resolver: zodResolver(validationSchema),
   })
 
-  type QueryKey = [MainQueryKey, number]
+  type QueryKey = [MainQueryKey, number] | [MainQueryKey]
 
-  const { isLoading, isSuccess, mutate: updatePost } = useUpdating<
+  const { isLoading, isSuccess, mutate } = useUpdating<
     QueryKey,
-    PostsItemReadingModel, // RequestModel
+    PostUpdatingModel | PostCreatingModel, // RequestModel
     ZodTypeDef, // todo - remove
-    PostsItemReadingDto, // RequestDto
-    PostUpdatingModel, // ResponseModel
+    PostUpdatingDto | PostCreatingDto, // RequestDto
+    PostsItemReadingModel, // ResponseModel
     ZodTypeDef, // todo - remove
-    PostUpdatingDto // ResponseDto
+    PostsItemReadingDto // ResponseDto
   >({
-    queryKey: [MainQueryKey.postUpdating, id],
-    urlParams: [id],
+    queryKey:
+      id === null
+        ? [MainQueryKey.postCreating]
+        : [MainQueryKey.postUpdating, id],
+    urlParams: id === null ? [] : [id],
   })
 
   const nameInput: LegacyRef<HTMLInputElement> | undefined = useRef(null)
   const { ref: nameRef, ...nameRest } = register('name')
 
   const onSubmit: SubmitHandler<ValidationSchema> = useCallback(
-    (data) => {
-      updatePost({ ...data, id, userId })
+    (data, event) => {
+      event?.preventDefault()
+      mutate(id === null ? { ...data, userId } : { ...data, id, userId })
     },
-    [id, updatePost, userId],
+    [id, mutate, userId],
   )
 
   const queryClient = useQueryClient()
@@ -91,10 +98,7 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
   }, [])
 
   return (
-    <StyledPostEditor
-      className={setClassName('PostEditor')}
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <StyledPostEditor className={setClassName('PostEditor')}>
       <StyledPostEditorTitle
         className={setClassName('PostEditorTitle', 'mb-2 text-3xl', {
           'bg-red': errors.name,
@@ -143,9 +147,9 @@ const PostEditor: FC<PropsWithEmotionNaming<Props>> = ({
         <ButtonSymbol
           className="text-[0.7rem] !text-red-500"
           disabled={isLoading || !isValid}
+          handleClick={handleSubmit(onSubmit)}
           label="save"
           renderLogId={`post-editor.save.${id}`}
-          type="submit"
         />
       </StyledToolbar>
     </StyledPostEditor>

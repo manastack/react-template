@@ -1,4 +1,9 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps, FC } from 'react'
+import {
+  ButtonHTMLAttributes,
+  DetailedHTMLProps,
+  FC,
+  MouseEventHandler,
+} from 'react'
 import {
   PropsWithEmotionNaming,
   withEmotionNaming,
@@ -11,7 +16,7 @@ type Props = DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
 > & {
-  handleClick?: (...p: unknown[]) => void
+  handleClick?: MouseEventHandler<HTMLButtonElement>
   className?: string
   label: string
 }

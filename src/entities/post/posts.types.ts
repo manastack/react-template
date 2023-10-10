@@ -48,3 +48,23 @@ export const PostUpdatingDtoSchema = PostUpdatingModelSchema.transform(
 
 export type PostUpdatingModel = z.infer<typeof PostUpdatingModelSchema>
 export type PostUpdatingDto = z.infer<typeof PostUpdatingDtoSchema>
+
+// postCreating schemas:
+
+export const PostCreatingModelSchema = z.object({
+  body: z.string(),
+  name: z.string(),
+  userId: z.number(),
+})
+
+export const PostCreatingDtoSchema = PostCreatingModelSchema.transform(
+  ({ name, ...restFields }) => ({
+    title: name,
+    ...restFields,
+  }),
+)
+
+// postCreating types:
+
+export type PostCreatingModel = z.infer<typeof PostCreatingModelSchema>
+export type PostCreatingDto = z.infer<typeof PostCreatingDtoSchema>

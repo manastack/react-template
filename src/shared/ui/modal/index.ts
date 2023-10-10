@@ -1,1 +1,7 @@
 export { default as Modal } from './modal'
+export { ModalContext } from './modal.context'
+export { default as ModalProvider } from './modal.provider'
+export { useModal } from './use.modal'
+export { withModal } from './with.modal'
+export type { PropsWithModal } from './with.modal'
+export { withModalProvider } from './with.modal.provider'
