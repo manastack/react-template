@@ -26,7 +26,7 @@ export const apiConfig: ApiConfig<MainQueryKey> = {
     mock: {
       delay: 1000,
       enabled: true,
-      loader: () => import('../../entities/post/posts.mock'),
+      loader: () => import('../../../entities/post/posts.mock'),
       url: '/api/posts',
     },
     requestSchema: PostCreatingDtoSchema,
@@ -47,7 +47,7 @@ export const apiConfig: ApiConfig<MainQueryKey> = {
     mock: {
       delay: 1000,
       enabled: true,
-      loader: () => import('../../entities/post/posts.mock'),
+      loader: () => import('../../../entities/post/posts.mock'),
       url: /api\/posts\/\d+/,
     },
     requestSchema: PostUpdatingDtoSchema,
@@ -66,7 +66,7 @@ export const apiConfig: ApiConfig<MainQueryKey> = {
     mock: {
       delay: 500,
       enabled: true,
-      loader: () => import('../../entities/post/posts.mock'),
+      loader: () => import('../../../entities/post/posts.mock'),
       url: '/api/posts',
     },
     responseSchema: PostsReadingModelSchema,
