@@ -1,3 +1,6 @@
+import styled from '@emotion/styled'
 import tw from 'twin.macro'
 
-export const StyledHome = tw.div`flex flex-auto flex-col items-stretch justify-start h-screen text-red-500 font-sans`
+export const StyledHome = styled.div`
+  ${tw`flex flex-auto items-center justify-center`};
+`

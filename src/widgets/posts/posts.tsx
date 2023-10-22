@@ -15,6 +15,8 @@ import { PostEditor, PostViewer } from './posts-item'
 import { StyledPosts } from './posts.style'
 
 type Props = {}
+
+// todo - rename this component to PostsList
 const Posts: FC<PropsWithEmotionNaming<Props>> = ({ setClassName }) => {
   type QueryKey = [MainQueryKey]
   const { data: posts, isError, isLoading } = useFetching<
@@ -31,7 +33,7 @@ const Posts: FC<PropsWithEmotionNaming<Props>> = ({ setClassName }) => {
   >(null)
 
   return (
-    <StyledPosts className={setClassName('Posts')}>
+    <StyledPosts className={setClassName('PostList')}>
       {isLoading && <div>Loading...</div>}
       {isError && <div>Error</div>}
       {posts?.map((post) => {

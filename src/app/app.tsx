@@ -1,4 +1,6 @@
 import { FC } from 'react'
+import { HelmetProvider } from 'react-helmet-async'
+import { HashRouter, Routes } from 'react-router-dom'
 import { Global } from '@emotion/react'
 import {
   PropsWithEmotionNaming,
@@ -7,8 +9,8 @@ import {
 import { useEnvContext } from '@manauser/react-env'
 import { withRenderLog } from '@manauser/react-render-log'
 
-import { Home } from '@pages/home'
-import { EnvKey } from './config'
+import { createRoute } from '@shared/lib/routing'
+import { EnvKey, rootRouteListConfig } from './config'
 import { withProviders } from './providers'
 
 import './styles/tailwind.css'
@@ -19,13 +21,15 @@ const App: FC<PropsWithEmotionNaming<{}>> = ({ setClassName }) => {
   const { VITE_TIMESTAMP } = useEnvContext<EnvKey>()
 
   return (
-    <>
+    <HelmetProvider>
       <Global styles={GlobalStyles} />
       <StyledApp className={setClassName('App')}>
-        <Home />
+        <HashRouter>
+          <Routes>{rootRouteListConfig.map(createRoute)}</Routes>
+        </HashRouter>
       </StyledApp>
       <span className="hidden">{VITE_TIMESTAMP}</span>
-    </>
+    </HelmetProvider>
   )
 }
 

@@ -9,6 +9,7 @@ import { useFetching } from '@shared/lib/api'
 import { withModalProvider } from '@shared/ui/modal'
 import { PostAdder } from './post-adder'
 
+// todo: rename to something like "PostsHeader"
 const Header: FC = () => {
   type QueryKey = [MainQueryKey]
   const { data: posts, isSuccess } = useFetching<
