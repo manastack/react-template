@@ -1,3 +1,5 @@
-import tw from 'twin.macro'
+import tw, { styled } from 'twin.macro'
 
-export const StyledPosts = tw.div`flex flex-auto flex-col items-stretch justify-start h-screen text-red-500 font-sans`
+export const StyledPosts = styled.div`
+  ${tw`flex h-screen flex-auto flex-col items-stretch justify-start overflow-y-auto font-sans text-red-500`}
+`
