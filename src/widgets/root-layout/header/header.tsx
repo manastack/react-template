@@ -15,8 +15,8 @@ const Header: FC<PropsWithEmotionNaming<{}>> = ({ setClassName }) => (
     <StyledNavLink to="/posts" className={setClassName('NavLink')}>
       Posts
     </StyledNavLink>
-    <StyledNavLink to="/ordered-list" className={setClassName('NavLink')}>
-      Ordered List
+    <StyledNavLink to="/kanban" className={setClassName('NavLink')}>
+      Kanban Board
     </StyledNavLink>
   </StyledHeader>
 )

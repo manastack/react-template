@@ -15,12 +15,10 @@ export const rootRouteListConfig: RouteConfig[] = [
         index: true,
       },
       {
-        id: 'ordered-list',
-        lazyComponent: lazy(
-          () => import('@pages/ordered-list'),
-        ) as LazyComponent,
-        path: 'ordered-list',
-        title: 'Ordered List',
+        id: 'kanban',
+        lazyComponent: lazy(() => import('src/pages/kanban')) as LazyComponent,
+        path: 'kanban',
+        title: 'Kanban Board',
       },
       {
         id: 'posts',

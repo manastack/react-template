@@ -1,6 +1,6 @@
 import { styled } from 'twin.macro'
 
-export const StyledOrderedList = styled.div`
+export const StyledKanban = styled.div`
   display: flex;
   align-items: center;
   flex: auto;
@@ -9,7 +9,7 @@ export const StyledOrderedList = styled.div`
   gap: 16px;
 `
 
-export const StyledOrderedListItem = styled.div`
+export const StyledCard = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
