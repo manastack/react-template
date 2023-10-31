@@ -12,12 +12,12 @@ import { PostsReadingDto, PostsReadingModel } from '@entities/post/posts.types'
 import { useFetching } from '@shared/lib/api'
 import { PostEditor, PostViewer } from './posts-item'
 
-import { StyledPosts } from './posts.style'
+import { StyledPosts } from './post-list.style'
 
 type Props = {}
 
 // todo - rename this component to PostsList
-const Posts: FC<PropsWithEmotionNaming<Props>> = ({ setClassName }) => {
+const PostList: FC<PropsWithEmotionNaming<Props>> = ({ setClassName }) => {
   type QueryKey = [MainQueryKey]
   const { data: posts, isError, isLoading } = useFetching<
     QueryKey,
@@ -61,4 +61,4 @@ const Posts: FC<PropsWithEmotionNaming<Props>> = ({ setClassName }) => {
   )
 }
 
-export default withEmotionNaming(withRenderLog(Posts))
+export default withEmotionNaming(withRenderLog(PostList))

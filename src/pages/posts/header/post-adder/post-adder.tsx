@@ -3,7 +3,7 @@ import { withRenderLog } from '@manauser/react-render-log'
 
 import { ButtonSymbol } from '@shared/ui/button-symbol'
 import { Modal, useModal } from '@shared/ui/modal'
-import { PostEditor } from '@widgets/posts/posts-item'
+import { PostEditor } from '@widgets/post-list/posts-item'
 
 const PostAdder: FC = () => {
   const { hidden, setHidden } = useModal()

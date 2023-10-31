@@ -4,8 +4,8 @@ import {
   withEmotionNaming,
 } from '@manauser/react-emotion-naming'
 import { withRenderLog } from '@manauser/react-render-log'
+import { Posts as PostsWidget } from 'src/widgets/post-list'
 
-import { Posts as PostsWidget } from '@widgets/posts'
 import { Header } from './header'
 
 import { StyledPosts } from './posts.style'
