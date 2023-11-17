@@ -10,6 +10,14 @@ export const rootRouteListConfig: RouteConfig[] = [
     id: 'root-layout',
     nestedRouteConfigs: [
       {
+        id: 'dnd-list',
+        lazyComponent: lazy(
+          () => import('src/pages/dnd-list'),
+        ) as LazyComponent,
+        path: 'dnd-list',
+        title: 'DnD List',
+      },
+      {
         component: Home,
         id: 'home',
         index: true,

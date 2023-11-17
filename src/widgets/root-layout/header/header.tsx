@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import {
   PropsWithEmotionNaming,
   withEmotionNaming,
@@ -7,18 +7,48 @@ import { withRenderLog } from '@manauser/react-render-log'
 
 import { StyledHeader, StyledNavLink } from './header.style'
 
-const Header: FC<PropsWithEmotionNaming<{}>> = ({ setClassName }) => (
-  <StyledHeader className={setClassName('Header')}>
-    <StyledNavLink to="/" className={setClassName('NavLink')}>
-      Home
-    </StyledNavLink>
-    <StyledNavLink to="/posts" className={setClassName('NavLink')}>
-      Posts
-    </StyledNavLink>
-    <StyledNavLink to="/kanban" className={setClassName('NavLink')}>
-      Kanban Board
-    </StyledNavLink>
-  </StyledHeader>
-)
+const Header: FC<PropsWithEmotionNaming<{}>> = ({ setClassName }) => {
+  type MenuItem = {
+    id: string
+    label: string
+    path: string
+  }
+
+  const menuItems: MenuItem[] = useMemo(
+    () => [
+      {
+        id: 'home',
+        label: 'Home',
+        path: '/',
+      },
+      {
+        id: 'posts',
+        label: 'Posts',
+        path: '/posts',
+      },
+      {
+        id: 'dnd-list',
+        label: 'Dnd-List',
+        path: '/dnd-list',
+      },
+      {
+        id: 'kanban',
+        label: 'Kanban-Board',
+        path: '/kanban',
+      },
+    ],
+    [],
+  )
+
+  return (
+    <StyledHeader className={setClassName('Header')}>
+      {menuItems.map(({ id, label, path }) => (
+        <StyledNavLink key={id} className={setClassName('NavLink')} to={path}>
+          {label}
+        </StyledNavLink>
+      ))}
+    </StyledHeader>
+  )
+}
 
 export default withEmotionNaming(withRenderLog(Header))
