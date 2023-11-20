@@ -24,9 +24,10 @@ const DndItem: FC<PropsWithEmotionNaming<Props>> = ({
   setClassName,
 }) => (
   <Draggable draggableId={item.id} index={index}>
-    {(provided) => (
+    {(provided, snapshot) => (
       <StyledDndItem
         className={setClassName('DndItem')}
+        isDragging={snapshot.isDragging}
         ref={provided.innerRef}
         {...provided.draggableProps}
         {...provided.dragHandleProps}
