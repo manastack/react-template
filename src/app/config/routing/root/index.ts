@@ -1,7 +1,6 @@
-import { lazy } from 'react'
-
 import { Home } from '@pages/home'
-import { LazyComponent, RouteConfig } from '@shared/lib/routing'
+import { getLazyComponent } from '@shared/lib/async'
+import { RouteConfig } from '@shared/lib/routing'
 import { RootLayout } from '@widgets/root-layout'
 
 export const rootRouteListConfig: RouteConfig[] = [
@@ -11,9 +10,7 @@ export const rootRouteListConfig: RouteConfig[] = [
     nestedRouteConfigs: [
       {
         id: 'dnd-list',
-        lazyComponent: lazy(
-          () => import('src/pages/dnd-list'),
-        ) as LazyComponent,
+        lazyComponent: getLazyComponent('/src/pages/dnd-list'),
         path: 'dnd-list',
         title: 'DnD List',
       },
@@ -24,13 +21,13 @@ export const rootRouteListConfig: RouteConfig[] = [
       },
       {
         id: 'kanban',
-        lazyComponent: lazy(() => import('src/pages/kanban')) as LazyComponent,
+        lazyComponent: getLazyComponent('/src/pages/kanban'),
         path: 'kanban',
         title: 'Kanban Board',
       },
       {
         id: 'posts',
-        lazyComponent: lazy(() => import('@pages/posts')) as LazyComponent,
+        lazyComponent: getLazyComponent('/src/pages/posts'),
         path: 'posts',
         title: 'Posts',
       },
@@ -39,7 +36,7 @@ export const rootRouteListConfig: RouteConfig[] = [
   },
   {
     id: 'no-match',
-    lazyComponent: lazy(() => import('@pages/no-match')) as LazyComponent,
+    lazyComponent: getLazyComponent('/src/pages/no-match'),
     path: '*',
   },
 ]
