@@ -1,4 +1,4 @@
-import { ComponentType, FC, LazyExoticComponent, Suspense } from 'react'
+import { ComponentType, FC, LazyExoticComponent } from 'react'
 
 import Page from './page'
 
@@ -11,7 +11,6 @@ type BaseElementProps = {
   componentProps?: Record<string, unknown>
   id: string
   lazyComponent?: LazyComponent
-  loadingComponent?: ComponentType
 }
 
 export type ElementProps = BaseElementProps & {
@@ -24,7 +23,6 @@ const RouteElement: FC<ElementProps> = (props) => {
     componentProps = {},
     id,
     lazyComponent: LazyComponent,
-    loadingComponent: LoadingComponent,
     title = null,
   } = props
 
@@ -43,12 +41,7 @@ const RouteElement: FC<ElementProps> = (props) => {
   }
 
   if (LazyComponent) {
-    const fallback = LoadingComponent ? <LoadingComponent /> : null
-    const render = () => (
-      <Suspense fallback={fallback}>
-        <LazyComponent {...componentProps} />
-      </Suspense>
-    )
+    const render = () => <LazyComponent {...componentProps} />
 
     if (title === null) {
       // it's a branch route

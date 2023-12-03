@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, Suspense } from 'react'
 import { HelmetProvider } from 'react-helmet-async'
 import { HashRouter, Routes } from 'react-router-dom'
 import { Global } from '@emotion/react'
@@ -24,9 +24,15 @@ const App: FC<PropsWithEmotionNaming<{}>> = ({ setClassName }) => {
     <HelmetProvider>
       <Global styles={GlobalStyles} />
       <StyledApp className={setClassName('App')}>
-        <HashRouter>
-          <Routes>{rootRouteListConfig.map(createRoute)}</Routes>
-        </HashRouter>
+        <Suspense
+          fallback={
+            <div className="fixed left-0 top-0 h-1 w-full bg-red-600" />
+          }
+        >
+          <HashRouter>
+            <Routes>{rootRouteListConfig.map(createRoute)}</Routes>
+          </HashRouter>
+        </Suspense>
       </StyledApp>
       <span className="hidden">{VITE_TIMESTAMP}</span>
     </HelmetProvider>
